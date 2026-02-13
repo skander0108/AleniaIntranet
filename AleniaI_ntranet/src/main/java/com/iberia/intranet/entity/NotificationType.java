@@ -1,0 +1,14 @@
+package com.iberia.intranet.entity;
+
+public enum NotificationType {
+    JOINER_CREATED,
+    EVENT_CREATED,
+    ANNOUNCEMENT_PUBLISHED,
+    UPDATE_PUBLISHED,
+    IT_TICKET_CREATED,
+    IT_TICKET_UPDATED,
+    LEAVE_REQUEST_CREATED,
+    LEAVE_REQUEST_APPROVED,
+    LEAVE_REQUEST_REJECTED,
+    GENERAL
+}
