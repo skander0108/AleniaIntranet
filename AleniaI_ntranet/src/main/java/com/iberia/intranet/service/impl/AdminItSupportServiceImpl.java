@@ -10,6 +10,7 @@ import com.iberia.intranet.repository.ItSupportCommentRepository;
 import com.iberia.intranet.repository.ItSupportTicketRepository;
 import com.iberia.intranet.repository.UserRepository;
 import com.iberia.intranet.service.AdminItSupportService;
+import com.iberia.intranet.service.DocumentService;
 import com.iberia.intranet.service.NotificationService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ public class AdminItSupportServiceImpl implements AdminItSupportService {
     private final ItSupportAuditLogRepository auditLogRepository;
     private final com.iberia.intranet.repository.KnowledgeCategoryRepository knowledgeCategoryRepository;
     private final com.iberia.intranet.repository.KnowledgeDocumentRepository knowledgeDocumentRepository;
+    private final DocumentService documentService;
 
     private final ItSupportTicketMapper ticketMapper;
     private final ItSupportCommentMapper commentMapper;
@@ -209,6 +211,13 @@ public class AdminItSupportServiceImpl implements AdminItSupportService {
 
         knowledgeDocumentRepository.save(document);
 
+        // Also create a downloadable PDF Document for the Knowledge Base module
+        documentService.createPdfDocumentFromText(
+                "KB - " + ticket.getTitle(),
+                contentBuilder.toString(),
+                "Knowledge Base",
+                "ALL",
+                "IT");
         logAudit(ticket, "CONVERTED_TO_KB", admin, null, "Ticket converted to Knowledge Base article");
     }
 

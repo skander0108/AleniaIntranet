@@ -79,7 +79,10 @@ public class AnnouncementServiceImpl implements AnnouncementService {
                 .orElseThrow(() -> new NotFoundException("Announcement not found: " + id));
 
         // Enforce ownership: Only owner or ADMIN can update
-        boolean isAdmin = currentUser.getRoles().stream()
+        User managedUser = userRepository.findById(currentUser.getId())
+                .orElseThrow(() -> new NotFoundException("User not found: " + currentUser.getId()));
+
+        boolean isAdmin = managedUser.getRoles().stream()
                 .anyMatch(role -> "ADMIN".equals(role.getRole().name()));
 
         if (!isAdmin
@@ -87,6 +90,8 @@ public class AnnouncementServiceImpl implements AnnouncementService {
             throw new org.springframework.security.access.AccessDeniedException(
                     "You are not authorized to update this announcement");
         }
+
+        String oldStatus = announcement.getStatus();
 
         announcement.setTitle(dto.getTitle());
         announcement.setContent(dto.getContent());
@@ -97,6 +102,13 @@ public class AnnouncementServiceImpl implements AnnouncementService {
         announcement.setIsFeatured(dto.getIsFeatured());
         announcement.setPriority(dto.getPriority());
         announcement.setTargetAudience(dto.getTargetAudience());
+
+        // When status transitions to PUBLISHED, update publishedAt to now
+        if ("PUBLISHED".equalsIgnoreCase(dto.getStatus())
+                && !"PUBLISHED".equalsIgnoreCase(oldStatus)) {
+            announcement.setPublishedAt(java.time.ZonedDateTime.now());
+            notificationService.notifyAnnouncementPublished(announcement.getId(), announcement.getTitle());
+        }
 
         return AnnouncementMapper.toDto(announcement);
     }

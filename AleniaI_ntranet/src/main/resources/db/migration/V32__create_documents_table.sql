@@ -1,0 +1,11 @@
+CREATE TABLE IF NOT EXISTS documents (
+    id BIGSERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    file_name VARCHAR(255) NOT NULL,
+    file_type VARCHAR(255) NOT NULL,
+    category VARCHAR(255) NOT NULL,
+    access_level VARCHAR(50) NOT NULL,
+    department VARCHAR(255),
+    upload_date TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    archived BOOLEAN NOT NULL DEFAULT FALSE
+);

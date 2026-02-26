@@ -1,4 +1,8 @@
 spring:
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
   datasource:
     url: jdbc:postgresql://localhost:5432/iberia_intranet
     username: postgres
@@ -42,4 +46,11 @@ iberia:
     jwtExpirationMs: 86400000 # 24 hours
     sse:
       public: true # Allow unauthenticated SSE access in dev mode (set to false in production)
+
+ispring:
+  api:
+    url: https://api-learn.ispringlearn.eu
+  client:
+    id: fc904fde-011a-11f1-9d01-0ef1391a362b
+    secret: 0mLYIDJ2iVP8ZHNZlY4cck_g6-mpf-AxWfgdouRVNyw
 

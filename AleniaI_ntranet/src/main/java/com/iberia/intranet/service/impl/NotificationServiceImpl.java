@@ -45,7 +45,7 @@ public class NotificationServiceImpl implements NotificationService {
         @Override
         @Transactional
         public List<NotificationDto> getUserNotifications(UUID userId, Pageable pageable) {
-                User user = userRepository.findById(userId)
+                User user = userRepository.findWithRolesById(userId)
                                 .orElseThrow(() -> new RuntimeException("User not found"));
 
                 List<String> roleNames = user.getRoles().stream()
@@ -78,7 +78,7 @@ public class NotificationServiceImpl implements NotificationService {
         @Override
         @Transactional
         public NotificationDto getNotification(UUID id, UUID userId) {
-                User user = userRepository.findById(userId)
+                User user = userRepository.findWithRolesById(userId)
                                 .orElseThrow(() -> new RuntimeException("User not found"));
 
                 Notification notification = notificationRepository.findById(id)
@@ -149,7 +149,7 @@ public class NotificationServiceImpl implements NotificationService {
         @Override
         @Transactional
         public void markAllAsRead(UUID userId) {
-                User user = userRepository.findById(userId)
+                User user = userRepository.findWithRolesById(userId)
                                 .orElseThrow(() -> new RuntimeException("User not found"));
 
                 List<String> roleNames = user.getRoles().stream()

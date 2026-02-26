@@ -42,6 +42,7 @@ public class EventServiceImpl implements EventService {
                 .eventDate(request.getEventDate())
                 .eventTime(request.getEventTime())
                 .location(request.getLocation())
+                .imageUrl(request.getImageUrl())
                 .user(currentUser)
                 .build();
 

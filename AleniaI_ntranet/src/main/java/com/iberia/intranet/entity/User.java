@@ -1,11 +1,14 @@
 package com.iberia.intranet.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -53,40 +56,62 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     @Builder.Default
+    @io.swagger.v3.oas.annotations.media.Schema(hidden = true)
     private Set<UserRole> roles = new HashSet<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     @Builder.Default
+    @io.swagger.v3.oas.annotations.media.Schema(hidden = true)
     private Set<ToolAccess> toolAccesses = new HashSet<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     @Builder.Default
+    @io.swagger.v3.oas.annotations.media.Schema(hidden = true)
     private Set<QuickLink> quickLinks = new HashSet<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     @Builder.Default
+    @io.swagger.v3.oas.annotations.media.Schema(hidden = true)
     private Set<Announcement> announcements = new HashSet<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     @Builder.Default
+    @io.swagger.v3.oas.annotations.media.Schema(hidden = true)
     private Set<AnnouncementView> announcementViews = new HashSet<>();
 
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     @Builder.Default
+    @io.swagger.v3.oas.annotations.media.Schema(hidden = true)
     private Set<KnowledgeDocument> knowledgeDocuments = new HashSet<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     @Builder.Default
+    @io.swagger.v3.oas.annotations.media.Schema(hidden = true)
     private Set<Enrollment> enrollments = new HashSet<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     @Builder.Default
+    @io.swagger.v3.oas.annotations.media.Schema(hidden = true)
     private Set<AssistantSession> assistantSessions = new HashSet<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "manager_id")
+    @ToString.Exclude
+    @JsonIgnore
+    @io.swagger.v3.oas.annotations.media.Schema(hidden = true)
+    private User manager;
+
+    @OneToMany(mappedBy = "manager", fetch = FetchType.LAZY)
+    @ToString.Exclude
+    @Builder.Default
+    @JsonIgnore
+    @io.swagger.v3.oas.annotations.media.Schema(hidden = true)
+    private Set<User> subordinates = new HashSet<>();
 }

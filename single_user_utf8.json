@@ -1,0 +1,62 @@
+﻿{
+    "role":  "learner",
+    "roleId":  "eaf02558-2ae1-11e9-8b17-0242ac13000a",
+    "userId":  "181cb7d5-0114-11f1-a1b2-2e675fca6ac4",
+    "departmentId":  "8f52079c-0573-11f0-998d-eebe298b228b",
+    "status":  1,
+    "fields":  [
+                   {
+                       "name":  "FIRST_NAME",
+                       "value":  "Haifa"
+                   },
+                   {
+                       "name":  "LAST_NAME",
+                       "value":  "CHERIF"
+                   },
+                   {
+                       "name":  "LOGIN",
+                       "value":  "haifa.cherif@alenia.io"
+                   },
+                   {
+                       "name":  "EMAIL",
+                       "value":  "haifa.cherif@alenia.io"
+                   },
+                   {
+                       "name":  "USER_DEFINED_FIELD1",
+                       "value":  ""
+                   },
+                   {
+                       "name":  "JOB_TITLE",
+                       "value":  ""
+                   },
+                   {
+                       "name":  "COUNTRY",
+                       "value":  "73"
+                   },
+                   {
+                       "name":  "BIRTHDATE",
+                       "value":  "1990-12-09"
+                   },
+                   {
+                       "name":  "ABOUT_ME",
+                       "value":  ""
+                   }
+               ],
+    "addedDate":  "2026-02-03",
+    "userRoles":  [
+                      {
+                          "roleId":  "eaf02558-2ae1-11e9-8b17-0242ac13000a",
+                          "roleType":  "learner"
+                      }
+                  ],
+    "groups":  [
+
+               ],
+    "lastLoginDate":  "2026-02-11",
+    "subordination":  {
+                          "subordinationType":  "inherit"
+                      },
+    "coSubordination":  {
+                            "subordinationType":  "inherit"
+                        }
+}
