@@ -1,12 +1,13 @@
 services:
   backend:
     build: ./AleniaI_ntranet
+    restart: always
     ports:
-      - "9090:8080"
+      - "127.0.0.1:9090:8080"
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/iberia_intranet
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/${DB_NAME:-iberia_intranet}
+      - SPRING_DATASOURCE_USERNAME=${DB_USER:-postgres}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD:-postgres}
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
     depends_on:
       - db
@@ -15,8 +16,9 @@ services:
 
   frontend:
     build: ./AleniaIntranetFront
+    restart: always
     ports:
-      - "8081:80"
+      - "${FRONTEND_PORT:-8081}:80"
     depends_on:
       - backend
     networks:
@@ -24,14 +26,15 @@ services:
 
   db:
     image: postgres:16-alpine
+    restart: always
     environment:
-      - POSTGRES_DB=iberia_intranet
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=${DB_NAME:-iberia_intranet}
+      - POSTGRES_USER=${DB_USER:-postgres}
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-postgres}
     volumes:
       - db-data:/var/lib/postgresql/data
     ports:
-      - "5433:5432"
+      - "127.0.0.1:5433:5432"
     networks:
       - app-network
 
