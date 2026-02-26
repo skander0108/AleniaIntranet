@@ -1,0 +1,53 @@
+<div class="px-6 py-8">
+    <div class="mb-8 flex justify-between items-center">
+        <div>
+            <h1 class="text-2xl font-bold text-text-main dark:text-white">Notifications</h1>
+            <p class="text-text-muted mt-1">Stay updated with the latest announcements and alerts</p>
+        </div>
+        <button (click)="markAllRead()" class="btn btn-secondary flex items-center gap-2">
+            <span class="material-symbols-outlined">done_all</span>
+            Mark all as read
+        </button>
+    </div>
+
+    <div
+        class="bg-white dark:bg-surface-dark rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+        <div *ngIf="loading" class="p-8 text-center">
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+        </div>
+
+        <div *ngIf="!loading && notifications.length === 0" class="p-12 text-center text-text-muted">
+            <span class="material-symbols-outlined text-6xl mb-4 opacity-20">notifications_off</span>
+            <p class="text-lg">You're all caught up!</p>
+        </div>
+
+        <div *ngFor="let notification of notifications" (click)="openDetails(notification)"
+            class="p-4 sm:p-6 border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors cursor-pointer flex gap-4 last:border-0"
+            [ngClass]="{'bg-primary/5': !notification.isRead}">
+
+            <div class="flex-shrink-0 mt-1">
+                <div class="h-3 w-3 rounded-full"
+                    [ngClass]="{'bg-primary': !notification.isRead, 'bg-gray-300 dark:bg-gray-600': notification.isRead}">
+                </div>
+            </div>
+
+            <div class="flex-1 min-w-0">
+                <div class="flex justify-between items-start gap-4">
+                    <h3 class="font-semibold text-text-main dark:text-white truncate"
+                        [ngClass]="{'text-primary': !notification.isRead}">
+                        {{ notification.title }}
+                    </h3>
+                    <span class="text-xs text-text-muted whitespace-nowrap">{{ notification.createdAt | date:'medium'
+                        }}</span>
+                </div>
+                <p class="text-text-muted mt-1 line-clamp-2">{{ notification.message }}</p>
+                <div class="mt-2 flex gap-2">
+                    <span
+                        class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
+                        {{ notification.targetType }}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

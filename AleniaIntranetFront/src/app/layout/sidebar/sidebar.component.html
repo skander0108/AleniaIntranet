@@ -1,0 +1,122 @@
+<aside
+    class="flex flex-col w-full h-full bg-surface-light dark:bg-surface-dark border-r border-[#f0f2f4] dark:border-gray-800">
+    <div class="flex items-center gap-3 px-6 py-5 border-b border-[#f0f2f4] dark:border-gray-800 h-[72px]">
+        <div class="size-8 bg-primary text-white rounded-lg flex items-center justify-center">
+            <span class="material-symbols-outlined">hub</span>
+        </div>
+        <div>
+            <h1 class="text-text-main dark:text-white text-base font-bold leading-tight tracking-[-0.015em]">Alenia
+                IBERIA</h1>
+            <p class="text-text-muted dark:text-gray-400 text-xs font-normal">Intranet Portal</p>
+        </div>
+    </div>
+    <div class="flex flex-col justify-between flex-1 overflow-y-auto px-4 py-6">
+        <nav class="flex flex-col gap-2">
+            <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/10 text-primary group" routerLink="/">
+                <span class="material-symbols-outlined filled">dashboard</span>
+                <span class="text-sm font-semibold">Dashboard</span>
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-muted hover:bg-[#f0f2f4] dark:hover:bg-gray-800 dark:text-gray-400 hover:text-text-main dark:hover:text-white transition-colors group"
+                routerLink="/news-feed" routerLinkActive="!bg-primary/10 !text-primary">
+                <span class="material-symbols-outlined group-hover:scale-110 transition-transform">newspaper</span>
+                <span class="text-sm font-medium">News Feed</span>
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-muted hover:bg-[#f0f2f4] dark:hover:bg-gray-800 dark:text-gray-400 hover:text-text-main dark:hover:text-white transition-colors group"
+                routerLink="/directory">
+                <span class="material-symbols-outlined group-hover:scale-110 transition-transform">group</span>
+                <span class="text-sm font-medium">Directory</span>
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-muted hover:bg-[#f0f2f4] dark:hover:bg-gray-800 dark:text-gray-400 hover:text-text-main dark:hover:text-white transition-colors group"
+                routerLink="/directory/org-chart" routerLinkActive="!bg-primary/10 !text-primary">
+                <span class="material-symbols-outlined group-hover:scale-110 transition-transform">account_tree</span>
+                <span class="text-sm font-medium">Organizational Chart</span>
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-muted hover:bg-[#f0f2f4] dark:hover:bg-gray-800 dark:text-gray-400 hover:text-text-main dark:hover:text-white transition-colors group"
+                routerLink="/documents">
+                <span class="material-symbols-outlined group-hover:scale-110 transition-transform">folder_open</span>
+                <span class="text-sm font-medium">Documents</span>
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-muted hover:bg-[#f0f2f4] dark:hover:bg-gray-800 dark:text-gray-400 hover:text-text-main dark:hover:text-white transition-colors group"
+                routerLink="/events">
+                <span class="material-symbols-outlined group-hover:scale-110 transition-transform">calendar_month</span>
+                <span class="text-sm font-medium">Events</span>
+            </a>
+            <!-- Leave Management -->
+            <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-muted hover:bg-[#f0f2f4] dark:hover:bg-gray-800 dark:text-gray-400 hover:text-text-main dark:hover:text-white transition-colors group"
+                routerLink="/leave">
+                <span class="material-symbols-outlined group-hover:scale-110 transition-transform">flight_takeoff</span>
+                <span class="text-sm font-medium">My Leaves</span>
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-muted hover:bg-[#f0f2f4] dark:hover:bg-gray-800 dark:text-gray-400 hover:text-text-main dark:hover:text-white transition-colors group"
+                routerLink="/expenses/my">
+                <span class="material-symbols-outlined group-hover:scale-110 transition-transform">payments</span>
+                <span class="text-sm font-medium">My Expenses</span>
+            </a>
+
+            <!-- LMS TRACKING -->
+            <div class="pt-4 pb-2">
+                <p class="px-3 text-xs font-semibold text-text-muted uppercase tracking-wider">Learning</p>
+            </div>
+
+            <!-- My Progress (All roles) -->
+            <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-muted hover:bg-[#f0f2f4] dark:hover:bg-gray-800 dark:text-gray-400 hover:text-text-main dark:hover:text-white transition-colors group"
+                routerLink="/lms/my-progress">
+                <span class="material-symbols-outlined group-hover:scale-110 transition-transform">school</span>
+                <span class="text-sm font-medium">My Progress</span>
+            </a>
+
+            <!-- Global Tracking (Admin/Manager) -->
+            <a *ngIf="isManagerOrAdmin()"
+                class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-muted hover:bg-[#f0f2f4] dark:hover:bg-gray-800 dark:text-gray-400 hover:text-text-main dark:hover:text-white transition-colors group"
+                routerLink="/lms/global-progress">
+                <span class="material-symbols-outlined group-hover:scale-110 transition-transform">leaderboard</span>
+                <span class="text-sm font-medium">Global Tracking</span>
+            </a>
+            <!-- IT Support (for non-admin users) -->
+            <a *ngIf="!isAdmin()"
+                class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-muted hover:bg-[#f0f2f4] dark:hover:bg-gray-800 dark:text-gray-400 hover:text-text-main dark:hover:text-white transition-colors group"
+                routerLink="/it-support/my">
+                <span class="material-symbols-outlined group-hover:scale-110 transition-transform">support_agent</span>
+                <span class="text-sm font-medium">IT Support</span>
+            </a>
+            <div *ngIf="isManagerOrAdmin()" class="pt-4 pb-2">
+                <p class="px-3 text-xs font-semibold text-text-muted uppercase tracking-wider">Management</p>
+            </div>
+            <a *ngIf="isManagerOrAdmin()"
+                class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-muted hover:bg-[#f0f2f4] dark:hover:bg-gray-800 dark:text-gray-400 hover:text-text-main dark:hover:text-white transition-colors group"
+                routerLink="/manager">
+                <span
+                    class="material-symbols-outlined group-hover:scale-110 transition-transform">space_dashboard</span>
+                <span class="text-sm font-medium">Manager Dashboard</span>
+            </a>
+            <a *ngIf="isManagerOrAdmin()"
+                class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-muted hover:bg-[#f0f2f4] dark:hover:bg-gray-800 dark:text-gray-400 hover:text-text-main dark:hover:text-white transition-colors group"
+                routerLink="/expenses/approvals">
+                <span class="material-symbols-outlined group-hover:scale-110 transition-transform">receipt_long</span>
+                <span class="text-sm font-medium">Expense Approvals</span>
+            </a>
+            <!-- Admin Panel (ADMIN only) -->
+            <a *ngIf="isAdmin()"
+                class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-muted hover:bg-[#f0f2f4] dark:hover:bg-gray-800 dark:text-gray-400 hover:text-text-main dark:hover:text-white transition-colors group"
+                routerLink="/admin-panel">
+                <span
+                    class="material-symbols-outlined group-hover:scale-110 transition-transform">admin_panel_settings</span>
+                <span class="text-sm font-medium">Admin Panel</span>
+            </a>
+        </nav>
+        <div class="mt-auto">
+            <div class="bg-primary/5 dark:bg-primary/20 rounded-xl p-4 mb-4">
+                <div class="flex items-center gap-2 mb-2 text-primary dark:text-blue-300">
+                    <span class="material-symbols-outlined text-xl">help</span>
+                    <span class="text-sm font-bold">Need Help?</span>
+                </div>
+                <p class="text-xs text-text-muted dark:text-gray-400 mb-3">Contact IT support for access issues.</p>
+                <a routerLink="/it-support/create"
+                    class="block w-full bg-white dark:bg-surface-dark text-text-main dark:text-white text-xs font-semibold py-2 rounded-lg border border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-center cursor-pointer">
+                    Open Ticket
+                </a>
+            </div>
+
+        </div>
+    </div>
+</aside>

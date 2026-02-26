@@ -1,0 +1,36 @@
+<div class="px-6 py-8">
+    <div class="mb-6">
+        <a routerLink="/notifications"
+            class="text-sm text-text-muted hover:text-primary flex items-center gap-1 transition-colors">
+            <span class="material-symbols-outlined text-lg">arrow_back</span>
+            Back to notifications
+        </a>
+    </div>
+
+    <div *ngIf="loading" class="p-12 text-center">
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+    </div>
+
+    <div *ngIf="!loading && notification"
+        class="bg-white dark:bg-surface-dark rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-8">
+        <div class="flex justify-between items-start gap-4 mb-6">
+            <div>
+                <h1 class="text-2xl font-bold text-text-main dark:text-white">{{ notification.title }}</h1>
+                <div class="flex items-center gap-3 mt-2 text-sm text-text-muted">
+                    <span>{{ notification.createdAt | date:'medium' }}</span>
+                    <span>&bull;</span>
+                    <span class="px-2 py-0.5 rounded bg-gray-100 dark:bg-gray-700 text-xs font-medium">{{
+                        notification.targetType }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="prose dark:prose-invert max-w-none text-text-main dark:text-gray-300 whitespace-pre-wrap">
+            {{ notification.message }}
+        </div>
+    </div>
+
+    <div *ngIf="!loading && !notification" class="text-center p-12">
+        <p class="text-text-muted">Notification not found</p>
+    </div>
+</div>

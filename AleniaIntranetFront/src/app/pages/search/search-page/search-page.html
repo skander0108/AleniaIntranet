@@ -1,0 +1,156 @@
+<div class="max-w-[1200px] mx-auto py-8 px-6">
+    <div class="mb-8">
+        <h1 class="text-3xl font-black text-text-main dark:text-white leading-tight tracking-[-0.033em]">Search Results
+        </h1>
+        <p class="text-[#617289] dark:text-gray-400 mt-2">
+            <span *ngIf="query && !isSearching">Showing results for "<strong
+                    class="text-primary">{{query}}</strong>"</span>
+            <span *ngIf="!query">Enter a search term to begin.</span>
+            <span *ngIf="isSearching">Searching...</span>
+        </p>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isSearching" class="py-20 flex justify-center">
+        <div class="w-10 h-10 border-4 border-primary/30 border-t-primary rounded-full animate-spin"></div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!isSearching && query && !hasResults"
+        class="bg-surface-light dark:bg-surface-dark border border-gray-100 dark:border-gray-800 rounded-2xl p-12 text-center shadow-sm">
+        <span class="material-symbols-outlined text-6xl text-gray-300 dark:text-gray-600 mb-4 block">search_off</span>
+        <h3 class="text-xl font-bold text-text-main dark:text-white mb-2">No results found</h3>
+        <p class="text-text-muted dark:text-gray-400 max-w-md mx-auto">
+            We couldn't find anything matching "{{query}}". Try checking your spelling or using more general terms.
+        </p>
+    </div>
+
+    <div *ngIf="!isSearching && hasResults" class="flex flex-col gap-12">
+
+        <!-- People Results -->
+        <section *ngIf="peopleResults.length > 0">
+            <div class="flex items-center gap-3 mb-6 border-b border-gray-100 dark:border-gray-800 pb-3">
+                <span class="material-symbols-outlined text-primary text-2xl">group</span>
+                <h2 class="text-xl font-bold text-text-main dark:text-white">Directory ({{peopleResults.length}})</h2>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <a *ngFor="let person of peopleResults" routerLink="/directory"
+                    class="block bg-surface-light dark:bg-surface-dark p-4 rounded-xl border border-gray-100 dark:border-gray-800 hover:border-primary/50 hover:shadow-md transition-all group">
+                    <div class="flex items-center gap-4 text-left">
+                        <div class="size-16 rounded-full overflow-hidden bg-gray-100 dark:bg-gray-800 shrink-0">
+                            <img *ngIf="person.photoUrl" [src]="'/api/files/' + person.photoUrl"
+                                class="w-full h-full object-cover" />
+                            <div *ngIf="!person.photoUrl"
+                                class="w-full h-full flex items-center justify-center text-gray-400 font-bold text-xl uppercase">
+                                {{ person.fullName.charAt(0) }}
+                            </div>
+                        </div>
+                        <div>
+                            <h4
+                                class="font-bold text-text-main dark:text-white group-hover:text-primary transition-colors">
+                                {{
+                                person.fullName }}</h4>
+                            <p class="text-xs text-primary font-medium mb-1">{{ person.jobTitle }}</p>
+                            <span
+                                class="inline-block px-2 py-0.5 bg-gray-100 dark:bg-gray-800 text-text-muted dark:text-gray-400 text-[10px] rounded uppercase font-bold tracking-wider">
+                                {{ person.department }}
+                            </span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- News Results -->
+        <section *ngIf="newsResults.length > 0">
+            <div class="flex items-center gap-3 mb-6 border-b border-gray-100 dark:border-gray-800 pb-3">
+                <span class="material-symbols-outlined text-orange-500 text-2xl">newspaper</span>
+                <h2 class="text-xl font-bold text-text-main dark:text-white">News & Announcements
+                    ({{newsResults.length}})</h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <a *ngFor="let news of newsResults" routerLink="/news-feed"
+                    class="flex flex-col bg-surface-light dark:bg-surface-dark rounded-xl overflow-hidden border border-gray-100 dark:border-gray-800 hover:border-orange-500/50 hover:shadow-lg transition-all group">
+                    <div class="h-40 bg-gray-200 dark:bg-gray-800 bg-cover bg-center overflow-hidden"
+                        [style.background-image]="news.imageUrl ? 'url(' + (news.imageUrl.startsWith('http') ? news.imageUrl : '/api/files/' + news.imageUrl) + ')' : ''">
+                        <div *ngIf="!news.imageUrl"
+                            class="w-full h-full flex items-center justify-center text-gray-400">
+                            <span class="material-symbols-outlined text-4xl">article</span>
+                        </div>
+                    </div>
+                    <div class="p-5 flex flex-col flex-1">
+                        <div class="flex justify-between items-center mb-2">
+                            <span
+                                class="text-xs font-bold text-orange-600 dark:text-orange-400 uppercase tracking-wider">{{
+                                news.category || 'News' }}</span>
+                            <span class="text-xs text-text-muted">{{ news.publishedAt | date:'shortDate' }}</span>
+                        </div>
+                        <h4
+                            class="font-bold text-lg text-text-main dark:text-white group-hover:text-primary transition-colors leading-tight mb-2 line-clamp-2">
+                            {{ news.title }}
+                        </h4>
+                        <p class="text-sm text-text-muted dark:text-gray-400 line-clamp-3">{{ news.summary ||
+                            news.content }}</p>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- Knowledge Base Results -->
+        <section *ngIf="kbResults.length > 0">
+            <div class="flex items-center gap-3 mb-6 border-b border-gray-100 dark:border-gray-800 pb-3">
+                <span class="material-symbols-outlined text-blue-500 text-2xl">menu_book</span>
+                <h2 class="text-xl font-bold text-text-main dark:text-white">Knowledge Base ({{kbResults.length}})</h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <a *ngFor="let kb of kbResults" [routerLink]="['/knowledge-base', kb.id]"
+                    class="bg-surface-light dark:bg-surface-dark p-5 rounded-xl border border-gray-100 dark:border-gray-800 hover:border-blue-500/50 hover:shadow-md transition-all group flex flex-col h-full">
+                    <div class="flex items-start gap-3 mb-3">
+                        <div
+                            class="w-10 h-10 rounded-lg bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
+                            <span class="material-symbols-outlined">library_books</span>
+                        </div>
+                        <div class="flex-1">
+                            <h4
+                                class="font-bold text-base text-text-main dark:text-white group-hover:text-primary transition-colors leading-tight mb-1 line-clamp-2">
+                                {{ kb.title }}
+                            </h4>
+                            <span class="text-xs text-text-muted">{{ kb.categoryName }}</span>
+                        </div>
+                    </div>
+                    <div class="flex gap-2 mt-auto">
+                        <span *ngFor="let tag of kb.tags | slice:0:3"
+                            class="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 rounded-md text-[10px] font-medium">
+                            {{ tag }}
+                        </span>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- Documents Results -->
+        <section *ngIf="documentResults.length > 0">
+            <div class="flex items-center gap-3 mb-6 border-b border-gray-100 dark:border-gray-800 pb-3">
+                <span class="material-symbols-outlined text-green-500 text-2xl">folder</span>
+                <h2 class="text-xl font-bold text-text-main dark:text-white">Documents ({{documentResults.length}})</h2>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <a *ngFor="let doc of documentResults" routerLink="/documents"
+                    class="flex items-center gap-4 bg-surface-light dark:bg-surface-dark p-4 rounded-xl border border-gray-100 dark:border-gray-800 hover:border-green-500/50 hover:shadow-md transition-all group">
+                    <div
+                        class="w-12 h-12 rounded-lg bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400 flex items-center justify-center shrink-0">
+                        <span class="material-symbols-outlined">description</span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h4
+                            class="font-bold text-text-main dark:text-white group-hover:text-primary transition-colors truncate">
+                            {{ doc.title }}
+                        </h4>
+                        <p class="text-xs text-text-muted truncate mt-0.5">{{ doc.fileName }}</p>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+    </div>
+</div>

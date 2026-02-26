@@ -1,0 +1,83 @@
+<div class="relative">
+    <button (click)="togglePlugin()"
+        class="relative p-2 text-text-muted hover:text-primary hover:bg-primary/5 rounded-full transition-colors">
+        <span class="material-symbols-outlined">notifications</span>
+        <span *ngIf="(unreadCount$ | async) as count"
+            class="absolute top-2 right-2 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white ring-2 ring-white dark:ring-surface-dark">
+            {{ count > 9 ? '9+' : count }}
+        </span>
+    </button>
+
+    <!-- Popover Panel -->
+    <div *ngIf="isOpen"
+        class="absolute right-0 mt-2 w-80 sm:w-96 bg-white dark:bg-surface-dark rounded-xl shadow-lg ring-1 ring-black ring-opacity-5 z-50 overflow-hidden transform transition-all">
+
+        <div
+            class="p-4 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center bg-gray-50/50 dark:bg-gray-800/50">
+            <h3 class="font-semibold text-text-main dark:text-white">Notifications</h3>
+            <button (click)="markAllRead()"
+                class="text-xs text-primary hover:text-primary-dark font-medium transition-colors">
+                Mark all read
+            </button>
+        </div>
+
+        <div class="max-h-[400px] overflow-y-auto">
+            <div *ngIf="(notifications$ | async) as notifications; else loading">
+                <ng-container *ngIf="notifications.length > 0; else emptyState">
+                    <div *ngFor="let notification of notifications" (click)="onNotificationClick(notification)"
+                        class="p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer transition-colors border-b border-gray-50 dark:border-gray-800 last:border-0 relative">
+
+                        <div class="flex gap-3">
+                            <div class="flex-shrink-0 mt-1 relative">
+                                <div
+                                    class="h-8 w-8 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-primary">
+                                    <span class="material-symbols-outlined text-lg">
+                                        {{ getIcon(notification.type) }}
+                                    </span>
+                                </div>
+                                <div *ngIf="!notification.isRead"
+                                    class="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-primary border-2 border-white dark:border-surface-dark">
+                                </div>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-medium text-text-main dark:text-white truncate"
+                                    [ngClass]="{'font-bold': !notification.isRead}">
+                                    {{ notification.title }}
+                                </p>
+                                <p class="text-xs text-text-muted mt-0.5 line-clamp-2">
+                                    {{ notification.message }}
+                                </p>
+                                <p class="text-[10px] text-text-muted mt-1.5">
+                                    {{ notification.createdAt | date:'short' }} <!-- Ideally relative time pipe -->
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+
+            <ng-template #loading>
+                <div class="p-8 text-center">
+                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+                </div>
+            </ng-template>
+
+            <ng-template #emptyState>
+                <div class="p-8 text-center text-text-muted">
+                    <span class="material-symbols-outlined text-4xl mb-2 opacity-50">notifications_off</span>
+                    <p class="text-sm">No notifications</p>
+                </div>
+            </ng-template>
+        </div>
+
+        <div class="p-3 bg-gray-50 dark:bg-gray-800/50 text-center border-t border-gray-100 dark:border-gray-700">
+            <a routerLink="/notifications" (click)="isOpen = false"
+                class="text-sm font-medium text-primary hover:text-primary-dark cursor-pointer transition-colors">
+                View all notifications
+            </a>
+        </div>
+    </div>
+
+    <!-- Backyard (Overlay) to close on outside click -->
+    <div *ngIf="isOpen" (click)="isOpen = false" class="fixed inset-0 z-40 bg-transparent cursor-default"></div>
+</div>

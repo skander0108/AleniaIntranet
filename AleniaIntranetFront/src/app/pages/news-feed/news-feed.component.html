@@ -1,0 +1,188 @@
+<div class="flex w-full gap-6">
+    <!-- Center Feed -->
+    <main class="flex-1 flex flex-col gap-6 max-w-4xl min-w-0">
+        <!-- Page Heading -->
+        <div class="flex flex-col gap-1">
+            <h1 class="text-text-main dark:text-white text-3xl font-black leading-tight tracking-[-0.033em]">Interactive
+                News Feed</h1>
+            <p class="text-text-muted dark:text-gray-400 text-base font-normal">Stay updated with the latest updates
+                from Alenia IBERIA.</p>
+        </div>
+
+        <!-- Filters -->
+        <div class="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+            <button (click)="setFilter('Latest')"
+                [class]="currentFilter === 'Latest' ? 'bg-text-main dark:bg-white text-white dark:text-text-main' : 'bg-white dark:bg-surface-dark border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 text-text-main dark:text-gray-200'"
+                class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full px-5 shadow-sm transition-colors text-sm font-medium leading-normal">
+                Latest
+            </button>
+            <button (click)="setFilter('Videos')"
+                [class]="currentFilter === 'Videos' ? 'bg-text-main dark:bg-white text-white dark:text-text-main' : 'bg-white dark:bg-surface-dark border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 text-text-main dark:text-gray-200'"
+                class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full px-5 transition-colors text-sm font-medium leading-normal">
+                Videos
+            </button>
+            <button (click)="setFilter('HR Updates')"
+                [class]="currentFilter === 'HR Updates' ? 'bg-text-main dark:bg-white text-white dark:text-text-main' : 'bg-white dark:bg-surface-dark border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 text-text-main dark:text-gray-200'"
+                class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full px-5 transition-colors text-sm font-medium leading-normal">
+                HR Updates
+            </button>
+            <button (click)="setFilter('Tech News')"
+                [class]="currentFilter === 'Tech News' ? 'bg-text-main dark:bg-white text-white dark:text-text-main' : 'bg-white dark:bg-surface-dark border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 text-text-main dark:text-gray-200'"
+                class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full px-5 transition-colors text-sm font-medium leading-normal">
+                Tech News
+            </button>
+        </div>
+
+        <!-- Loading state -->
+        <div *ngIf="loading" class="flex justify-center items-center py-12">
+            <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-primary"></div>
+        </div>
+
+        <ng-container *ngIf="!loading">
+            <!-- Empty state -->
+            <div *ngIf="filteredNews.length === 0"
+                class="flex flex-col items-center justify-center py-16 px-4 bg-white/40 dark:bg-gray-800/40 backdrop-blur-sm rounded-3xl border border-dashed border-gray-300 dark:border-gray-700">
+                <span class="material-symbols-outlined text-5xl text-gray-400 mb-3">newspaper</span>
+                <h3 class="text-lg font-bold text-text-main dark:text-white">No news items found</h3>
+                <p class="text-sm text-text-muted dark:text-gray-400">Check back later for updates.</p>
+            </div>
+
+            <div *ngFor="let item of filteredNews">
+                <!-- ANNOUNCEMENT CARD -->
+                <article *ngIf="item.type === 'ANNOUNCEMENT'"
+                    class="bg-white dark:bg-surface-dark rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden mb-6">
+                    <div class="flex flex-col sm:flex-row">
+                        <!-- Dynamic or placeholder image -->
+                        <div class="sm:w-1/3 h-48 sm:h-auto bg-cover bg-center shrink-0"
+                            [style.backgroundImage]="'url(' + (item.imageUrl || 'https://lh3.googleusercontent.com/aida-public/AB6AXuCw5wB8FVLXqmhOEf4sdrWXqU-mXAIjFj6Qy5Y59BVIjviA1ZibeqvO7aZ8nwAILbonPI38fOZAuTRBI-5W4WvR8nW77ge_lEb2_3k_ueud6N6iyGL6dpBjxmkKLN7aIGJawbclPvZB4AY4aT27G-oinGo2rgpEs0uqt8a4ozgyqR--c733h4xCmxWEx8ND4emcjMfjxg5c01PDWypCczIDFutrZ1zEn9zMNEcASFIibV4NtJP1M8XeayrrRS8d0_cchpRoNldP0ggY') + ')'">
+                        </div>
+                        <div class="flex-1 p-5 flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center gap-2 mb-2">
+                                    <span
+                                        class="px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs font-bold uppercase tracking-wider">{{
+                                        item.category || 'Announcement' }}</span>
+                                    <span class="text-xs text-text-muted dark:text-gray-400">{{ item.createdAt |
+                                        date:'medium' }}</span>
+                                </div>
+                                <h3 class="text-xl font-bold text-text-main dark:text-white mb-2 leading-tight">{{
+                                    item.title }}</h3>
+                                <p class="text-text-muted dark:text-gray-300 text-sm line-clamp-3 mb-4"
+                                    [innerHTML]="item.description || 'No additional details provided.'"></p>
+                            </div>
+                            <div class="flex items-center justify-between mt-auto">
+                                <!-- Engagement mockup -->
+                                <div class="flex -space-x-2">
+                                    <div
+                                        class="w-8 h-8 rounded-full border-2 border-white dark:border-surface-dark bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-xs font-bold text-gray-500 dark:text-gray-300">
+                                        <span class="material-symbols-outlined text-[14px]">thumb_up</span>
+                                    </div>
+                                </div>
+                                <button class="text-primary text-sm font-semibold hover:underline">Read More</button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- EVENT CARD -->
+                <article *ngIf="item.type === 'EVENT'"
+                    class="bg-white dark:bg-surface-dark rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden mb-6 hover:shadow-md transition-shadow">
+                    <div class="flex flex-col sm:flex-row">
+                        <!-- Dynamic image only if provided -->
+                        <div *ngIf="item.imageUrl" class="sm:w-1/3 h-48 sm:h-auto bg-cover bg-center shrink-0"
+                            [style.backgroundImage]="'url(' + item.imageUrl + ')'">
+                        </div>
+                        <div class="flex-1 p-5 flex flex-col justify-between">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="flex items-center gap-4">
+                                    <div
+                                        class="flex flex-col items-center justify-center w-14 h-14 rounded-xl bg-primary/10 text-primary shrink-0 shadow-sm">
+                                        <span class="text-[11px] font-bold uppercase tracking-wider">{{ item.eventDate ?
+                                            (item.eventDate | date:'MMM') : (item.createdAt | date:'MMM') }}</span>
+                                        <span class="text-xl font-black leading-none">{{ item.eventDate ?
+                                            (item.eventDate |
+                                            date:'dd') : (item.createdAt | date:'dd') }}</span>
+                                    </div>
+                                    <div>
+                                        <h3
+                                            class="text-sm font-bold text-text-main dark:text-white uppercase tracking-wider text-primary">
+                                            Company Event</h3>
+                                        <p class="text-xs text-text-muted dark:text-gray-400 font-medium mt-0.5">Added
+                                            {{
+                                            item.createdAt | date:'shortDate' }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <h3 class="text-xl font-bold text-text-main dark:text-white mb-2">{{ item.title }}</h3>
+                            <p class="text-text-muted dark:text-gray-300 text-sm mb-4 line-clamp-2"
+                                [innerHTML]="item.description || 'Join us for this upcoming event.'"></p>
+                            <div
+                                class="flex items-center gap-6 pt-4 border-t border-gray-100 dark:border-gray-700/50 text-text-muted dark:text-gray-400 mt-auto">
+                                <div class="flex items-center gap-2 text-sm font-medium">
+                                    <span class="material-symbols-outlined text-[20px] text-gray-400">location_on</span>
+                                    <span>{{ item.location || 'Location TBD' }}</span>
+                                </div>
+                                <button
+                                    class="flex items-center gap-2 text-sm font-medium hover:text-primary transition-colors ml-auto text-primary bg-primary/5 hover:bg-primary/10 px-3 py-1.5 rounded-lg">
+                                    <span class="material-symbols-outlined text-[20px]">how_to_reg</span> Register
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </ng-container>
+    </main>
+
+    <!-- Right Sidebar -->
+    <aside class="hidden xl:flex w-80 flex-col gap-6 shrink-0 sticky top-4 h-fit">
+        <!-- Events Widget Mockup -->
+        <div class="bg-white dark:bg-surface-dark p-5 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-base font-bold text-text-main dark:text-white">Upcoming Highlights</h3>
+                <a routerLink="/events" class="text-xs font-semibold text-primary hover:underline">View All</a>
+            </div>
+            <div class="space-y-4">
+                <div class="flex gap-3">
+                    <div
+                        class="flex flex-col items-center justify-center w-12 h-12 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 shrink-0">
+                        <span class="text-[10px] font-bold uppercase">Nov</span>
+                        <span class="text-lg font-bold leading-none">24</span>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-bold text-text-main dark:text-white leading-tight">Town Hall Meeting
+                        </h4>
+                        <p class="text-xs text-text-muted dark:text-gray-400 mt-1">10:00 AM • Auditorium</p>
+                    </div>
+                </div>
+                <div class="flex gap-3">
+                    <div
+                        class="flex flex-col items-center justify-center w-12 h-12 rounded-lg bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 shrink-0">
+                        <span class="text-[10px] font-bold uppercase">Dec</span>
+                        <span class="text-lg font-bold leading-none">05</span>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-bold text-text-main dark:text-white leading-tight">Annual Gala Dinner
+                        </h4>
+                        <p class="text-xs text-text-muted dark:text-gray-400 mt-1">19:00 PM • Hotel Palace</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trending Topics Mockup -->
+        <div class="bg-white dark:bg-surface-dark p-5 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800">
+            <h3 class="text-base font-bold text-text-main dark:text-white mb-4">Trending Now</h3>
+            <div class="flex flex-wrap gap-2">
+                <span
+                    class="px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-700 text-xs font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer transition-colors">#ProjectPhoenix</span>
+                <span
+                    class="px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-700 text-xs font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer transition-colors">#RemoteWork</span>
+                <span
+                    class="px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-700 text-xs font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer transition-colors">#Q3Results</span>
+                <span
+                    class="px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-700 text-xs font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer transition-colors">#NewHires</span>
+            </div>
+        </div>
+    </aside>
+</div>

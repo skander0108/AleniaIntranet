@@ -1,0 +1,171 @@
+<div class="w-full">
+    <!-- Toolbar -->
+    <div
+        class="bg-white dark:bg-gray-800 rounded-t-2xl border-b border-gray-100 dark:border-gray-700/50 p-5 sm:p-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div>
+            <h2 class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary">groups</span>
+                Learners Progress
+            </h2>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Track course completion and scores across the
+                organization.</p>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="relative w-full sm:w-80">
+            <div class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none">
+                <span class="material-symbols-outlined text-gray-400 text-xl">search</span>
+            </div>
+            <input type="text" [(ngModel)]="searchTerm" (keyup.enter)="onSearch()"
+                class="block w-full py-2.5 pl-10 pr-4 text-sm text-gray-900 bg-gray-50/50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary dark:bg-gray-900/50 dark:border-gray-700 dark:placeholder-gray-400 dark:text-white transition-all shadow-sm"
+                placeholder="Search by name, email, course...">
+            <!-- Optional Search Button if desired -->
+            <button (click)="onSearch()"
+                class="absolute inset-y-0 right-1.5 flex items-center px-2 text-primary hover:text-primary/80 transition-colors"
+                [disabled]="loading">
+                <span class="material-symbols-outlined text-lg" *ngIf="!loading">arrow_forward</span>
+                <svg *ngIf="loading" class="animate-spin h-4 w-4 text-primary" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                    </path>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div
+        class="bg-white dark:bg-gray-800 rounded-b-2xl shadow-sm border border-t-0 border-gray-100 dark:border-gray-700/50 overflow-hidden">
+
+        <div *ngIf="loading && !data.length" class="flex flex-col justify-center items-center py-20">
+            <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-primary mb-4"></div>
+            <p class="text-sm font-medium text-gray-500">Loading progress data...</p>
+        </div>
+
+        <div class="overflow-x-auto" *ngIf="data.length > 0">
+            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                <thead
+                    class="text-xs text-gray-500 uppercase bg-gray-50/80 dark:bg-gray-900/50 dark:text-gray-400 tracking-wider">
+                    <tr>
+                        <th scope="col" class="px-6 py-4 font-semibold">Learner</th>
+                        <th scope="col" class="px-6 py-4 font-semibold">Course Module</th>
+                        <th scope="col" class="px-6 py-4 font-semibold">Type</th>
+                        <th scope="col" class="px-6 py-4 font-semibold">Status</th>
+                        <th scope="col" class="px-6 py-4 font-semibold">Score</th>
+                        <th scope="col" class="px-6 py-4 font-semibold">Last Updated</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100 dark:divide-gray-700/50">
+                    <tr class="hover:bg-gray-50/80 dark:hover:bg-gray-700/30 transition-colors group"
+                        *ngFor="let item of data">
+                        <td class="px-6 py-4">
+                            <div class="flex flex-col cursor-pointer group/item rounded-lg p-2 -ml-2 hover:bg-white dark:hover:bg-gray-600 shadow-sm hover:shadow transition-all border border-transparent hover:border-gray-200 dark:hover:border-gray-500"
+                                (click)="filterByUser(item.userFullName)"
+                                title="Click to view all progress for this user">
+                                <span
+                                    class="font-bold text-gray-900 dark:text-white group-hover/item:text-primary transition-colors flex items-center gap-1.5">
+                                    {{ item.userFullName }}
+                                    <span
+                                        class="material-symbols-outlined text-[14px] opacity-0 group-hover/item:opacity-100 transition-opacity text-primary">filter_list</span>
+                                </span>
+                                <span class="text-xs text-gray-500 dark:text-gray-400 font-medium mt-0.5">{{ item.email
+                                    }}</span>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 font-semibold text-gray-800 dark:text-gray-200">{{ item.courseTitle }}</td>
+                        <td class="px-6 py-4">
+                            <span
+                                class="inline-flex items-center gap-1.5 text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 px-2.5 py-1 rounded-md text-xs font-medium">
+                                <span class="material-symbols-outlined text-[14px]">{{ item.courseType === 'Course' ?
+                                    'library_books' : 'quiz' }}</span>
+                                {{ item.courseType }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span
+                                class="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-bold rounded-lg border"
+                                [ngClass]="{
+                  'bg-green-50 text-green-700 border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800/30': item.status === 'completed' || item.status === 'passed',
+                  'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-900/20 dark:text-amber-400 dark:border-amber-800/30': item.status === 'incomplete' || item.status === 'viewed',
+                  'bg-gray-50 text-gray-600 border-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-700': item.status === 'not_attempted' || !item.status,
+                  'bg-red-50 text-red-700 border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-800/30': item.status === 'failed'
+                }">
+                                <span class="w-1.5 h-1.5 rounded-full" [ngClass]="{
+                                    'bg-green-500': item.status === 'completed' || item.status === 'passed',
+                                    'bg-amber-500': item.status === 'incomplete' || item.status === 'viewed',
+                                    'bg-gray-400': item.status === 'not_attempted' || !item.status,
+                                    'bg-red-500': item.status === 'failed'
+                                }"></span>
+                                {{ item.status || 'Not Started' | titlecase }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div *ngIf="item.score !== null && item.maxScore !== null" class="flex items-center gap-2">
+                                <div class="w-16 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                                    <div class="h-full rounded-full"
+                                        [ngClass]="(item.score / item.maxScore) >= 0.8 ? 'bg-green-500' : ((item.score / item.maxScore) >= 0.5 ? 'bg-amber-500' : 'bg-red-500')"
+                                        [style.width]="(item.score / item.maxScore * 100) + '%'"></div>
+                                </div>
+                                <span class="font-bold text-gray-900 dark:text-white text-xs">{{ item.score }}/{{
+                                    item.maxScore }}</span>
+                            </div>
+                            <span *ngIf="item.score === null || item.maxScore === null"
+                                class="text-gray-400 font-medium">-</span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div *ngIf="item.completionDate" class="flex flex-col">
+                                <span class="font-medium text-gray-900 dark:text-white">{{ item.completionDate |
+                                    date:'mediumDate' }}</span>
+                                <span class="text-xs text-gray-500">{{ item.completionDate | date:'shortTime' }}</span>
+                            </div>
+                            <span *ngIf="!item.completionDate"
+                                class="inline-flex items-center gap-1 text-gray-400 text-xs font-medium italic">
+                                <span class="material-symbols-outlined text-[14px]">pending</span>
+                                In progress
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div *ngIf="!loading && data.length === 0"
+            class="flex flex-col items-center justify-center py-16 text-gray-500 dark:text-gray-400">
+            <div
+                class="w-16 h-16 mb-4 rounded-full bg-gray-50 dark:bg-gray-800 flex items-center justify-center border border-gray-100 dark:border-gray-700">
+                <span class="material-symbols-outlined text-3xl text-gray-400">search_off</span>
+            </div>
+            <p class="font-semibold text-gray-900 dark:text-white">No progress found</p>
+            <p class="text-sm mt-1">Try adjusting your search criteria.</p>
+        </div>
+
+        <!-- Pagination -->
+        <div class="px-6 py-4 border-t border-gray-100 dark:border-gray-700/50 bg-gray-50/30 dark:bg-gray-800/30 flex flex-col sm:flex-row items-center justify-between gap-4"
+            *ngIf="totalElements > 0">
+            <span class="text-sm text-gray-600 dark:text-gray-400 font-medium">
+                Showing <span class="font-bold text-gray-900 dark:text-white">{{ (currentPage * pageSize) + 1 }}</span>
+                to <span class="font-bold text-gray-900 dark:text-white">{{ min((currentPage + 1) * pageSize,
+                    totalElements) }}</span>
+                of <span class="font-bold text-gray-900 dark:text-white">{{ totalElements }}</span> results
+            </span>
+
+            <div
+                class="flex items-center space-x-1.5 rounded-lg bg-gray-100/50 dark:bg-gray-900/50 p-1 border border-gray-200/50 dark:border-gray-700/50">
+                <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 0 || loading"
+                    class="p-1.5 rounded-md hover:bg-white dark:hover:bg-gray-700 disabled:opacity-30 disabled:hover:bg-transparent transition-all text-gray-600 dark:text-gray-300 hover:shadow-sm"
+                    title="Previous page">
+                    <span class="material-symbols-outlined text-sm">chevron_left</span>
+                </button>
+                <div class="px-3 text-xs font-bold text-gray-700 dark:text-gray-300">
+                    Page {{ currentPage + 1 }} <span class="text-gray-400 font-normal mx-1">/</span> {{ totalPages }}
+                </div>
+                <button (click)="changePage(currentPage + 1)" [disabled]="currentPage >= totalPages - 1 || loading"
+                    class="p-1.5 rounded-md hover:bg-white dark:hover:bg-gray-700 disabled:opacity-30 disabled:hover:bg-transparent transition-all text-gray-600 dark:text-gray-300 hover:shadow-sm"
+                    title="Next page">
+                    <span class="material-symbols-outlined text-sm">chevron_right</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,24 @@
+<div
+    class="bg-surface-light dark:bg-surface-dark p-6 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm">
+    <h3 class="text-base font-bold text-text-main dark:text-white mb-4 flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary">link</span>
+        External Hubs
+    </h3>
+    <div class="space-y-3">
+        <a *ngFor="let hub of hubs()" [href]="hub.url" target="_blank" rel="noopener noreferrer"
+            class="flex items-center justify-between p-3 rounded-xl hover:opacity-90 transition-all border group"
+            [ngClass]="getThemeClass(hub)">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg flex items-center justify-center text-white shadow-sm"
+                    [ngClass]="getIconBgClass(hub)">
+                    <span class="material-symbols-outlined text-[20px]">{{ hub.icon }}</span>
+                </div>
+                <div>
+                    <p class="text-sm font-bold text-text-main dark:text-white">{{ hub.label }}</p>
+                    <p class="text-xs text-text-muted">{{ hub.description }}</p>
+                </div>
+            </div>
+            <span class="material-symbols-outlined text-text-muted transition-colors text-sm">open_in_new</span>
+        </a>
+    </div>
+</div>

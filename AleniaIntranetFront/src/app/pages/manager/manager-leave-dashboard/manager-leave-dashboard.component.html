@@ -1,0 +1,150 @@
+<div class="p-6 max-w-7xl mx-auto space-y-6">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+            <h1 class="text-2xl font-bold text-text-main dark:text-white">Team Leave Requests</h1>
+            <p class="text-text-muted mt-1">Review and manage leave requests from your team.</p>
+        </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="border-b border-gray-200 dark:border-gray-700">
+        <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+            <button (click)="changeTab(LeaveStatus.PENDING)"
+                [class.border-primary]="currentStatus === LeaveStatus.PENDING"
+                [class.text-primary]="currentStatus === LeaveStatus.PENDING"
+                class="border-b-2 py-4 px-1 text-sm font-medium hover:border-gray-300 hover:text-gray-700 border-transparent text-text-muted transition-colors">
+                Pending
+            </button>
+            <button (click)="changeTab(LeaveStatus.APPROVED)"
+                [class.border-primary]="currentStatus === LeaveStatus.APPROVED"
+                [class.text-primary]="currentStatus === LeaveStatus.APPROVED"
+                class="border-b-2 py-4 px-1 text-sm font-medium hover:border-gray-300 hover:text-gray-700 border-transparent text-text-muted transition-colors">
+                Approved
+            </button>
+            <button (click)="changeTab(LeaveStatus.REJECTED)"
+                [class.border-primary]="currentStatus === LeaveStatus.REJECTED"
+                [class.text-primary]="currentStatus === LeaveStatus.REJECTED"
+                class="border-b-2 py-4 px-1 text-sm font-medium hover:border-gray-300 hover:text-gray-700 border-transparent text-text-muted transition-colors">
+                Rejected
+            </button>
+            <button (click)="changeTab('ALL')" [class.border-primary]="currentStatus === 'ALL'"
+                [class.text-primary]="currentStatus === 'ALL'"
+                class="border-b-2 py-4 px-1 text-sm font-medium hover:border-gray-300 hover:text-gray-700 border-transparent text-text-muted transition-colors">
+                All History
+            </button>
+        </nav>
+    </div>
+
+    <!-- Content -->
+    <div
+        class="bg-white dark:bg-surface-dark rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+                <thead class="bg-gray-50 dark:bg-gray-800/50">
+                    <tr>
+                        <th class="px-6 py-3 font-semibold text-text-main dark:text-white">Employee</th>
+                        <th class="px-6 py-3 font-semibold text-text-main dark:text-white">Type</th>
+                        <th class="px-6 py-3 font-semibold text-text-main dark:text-white">Dates</th>
+                        <th class="px-6 py-3 font-semibold text-text-main dark:text-white">Duration</th>
+                        <th class="px-6 py-3 font-semibold text-text-main dark:text-white">Reason</th>
+                        <th class="px-6 py-3 font-semibold text-text-main dark:text-white">Status</th>
+                        <th class="px-6 py-3 font-semibold text-text-main dark:text-white text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+                    <tr *ngFor="let req of requests"
+                        class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                        <td class="px-6 py-4">
+                            <div class="font-medium text-text-main dark:text-white">{{ req.employeeName }}</div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-2">
+                                <div class="w-2 h-2 rounded-full" [style.backgroundColor]="req.leaveType.colorCode">
+                                </div>
+                                <span class="text-text-main dark:text-white">{{ req.leaveType.name }}</span>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-text-muted whitespace-nowrap">
+                            {{ req.startDate | date:'MMM d' }}
+                            <span *ngIf="req.startDate !== req.endDate"> - {{ req.endDate | date:'MMM d' }}</span>
+                        </td>
+                        <td class="px-6 py-4 text-text-muted">{{ req.duration }} days</td>
+                        <td class="px-6 py-4 text-text-muted max-w-xs truncate" [title]="req.reason">
+                            {{ req.reason }}
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="px-2 py-1 rounded-full text-xs font-semibold"
+                                [ngClass]="getStatusClass(req.status)">
+                                {{ req.status }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <div class="flex justify-end gap-2" *ngIf="req.status === 'PENDING'">
+                                <button (click)="approveRequest(req.id)"
+                                    class="p-1 rounded hover:bg-green-100 text-green-600 dark:hover:bg-green-900/30 transition-colors"
+                                    title="Approve">
+                                    <span class="material-symbols-outlined text-lg">check_circle</span>
+                                </button>
+                                <button (click)="openRejectModal(req.id)"
+                                    class="p-1 rounded hover:bg-red-100 text-red-600 dark:hover:bg-red-900/30 transition-colors"
+                                    title="Reject">
+                                    <span class="material-symbols-outlined text-lg">cancel</span>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr *ngIf="!loading && requests.length === 0">
+                        <td colspan="7" class="px-6 py-8 text-center text-text-muted">No requests found.</td>
+                    </tr>
+                    <tr *ngIf="loading">
+                        <td colspan="7" class="px-6 py-8 text-center">
+                            <span
+                                class="material-symbols-outlined animate-spin text-primary text-3xl">progress_activity</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="px-6 py-3 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/30 flex justify-between items-center"
+            *ngIf="totalPages > 1">
+            <span class="text-xs text-text-muted">Page {{ currentPage + 1 }} of {{ totalPages }}</span>
+            <div class="flex gap-2">
+                <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 0"
+                    class="px-2 py-1 rounded border border-gray-200 dark:border-gray-700 bg-white dark:bg-surface-dark text-xs disabled:opacity-50">Previous</button>
+                <button (click)="changePage(currentPage + 1)" [disabled]="currentPage >= totalPages - 1"
+                    class="px-2 py-1 rounded border border-gray-200 dark:border-gray-700 bg-white dark:bg-surface-dark text-xs disabled:opacity-50">Next</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4" *ngIf="isRejectModalOpen">
+    <div class="absolute inset-0 bg-black/30 backdrop-blur-sm" (click)="closeRejectModal()"></div>
+    <div
+        class="relative bg-white dark:bg-surface-dark rounded-xl shadow-xl w-full max-w-sm p-6 animate-in fade-in zoom-in duration-200">
+        <h2 class="text-lg font-bold mb-4 text-text-main dark:text-white">Reject Request</h2>
+
+        <div class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-text-muted mb-1">Reason for Rejection</label>
+                <textarea [(ngModel)]="rejectReason" rows="3"
+                    class="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-transparent text-text-main dark:text-white focus:ring-2 focus:ring-red-500/50"
+                    placeholder="Enter reason..."></textarea>
+            </div>
+
+            <div class="flex justify-end gap-3 mt-6">
+                <button (click)="closeRejectModal()"
+                    class="px-4 py-2 rounded-lg text-text-muted hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                    Cancel
+                </button>
+                <button (click)="confirmReject()" [disabled]="!rejectReason.trim()"
+                    class="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition-colors disabled:opacity-50">
+                    Reject Request
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

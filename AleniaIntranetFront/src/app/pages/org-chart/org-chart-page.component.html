@@ -1,0 +1,267 @@
+<!-- LOADING STATE -->
+<div *ngIf="isLoading" class="flex-1 flex items-center justify-center py-32">
+    <div class="text-center">
+        <div class="inline-block w-10 h-10 border-4 border-primary/30 border-t-primary rounded-full animate-spin mb-4">
+        </div>
+        <p class="text-gray-500 dark:text-gray-400 text-sm">Loading organizational chart...</p>
+    </div>
+</div>
+
+<ng-container *ngIf="!isLoading">
+
+    <!-- BREADCRUMBS & HEADING -->
+    <div class="bg-white dark:bg-[#111418] px-6 md:px-10 py-6 border-b border-[#f0f2f4] dark:border-gray-800">
+        <div class="max-w-[1400px] mx-auto w-full">
+            <!-- Breadcrumbs -->
+            <div class="flex flex-wrap gap-2 mb-4 text-sm">
+                <a class="text-[#617289] dark:text-gray-400 font-medium hover:text-primary" routerLink="/">Alenia
+                    IBERIA</a>
+                <span class="text-[#617289] dark:text-gray-400">/</span>
+                <a class="text-[#617289] dark:text-gray-400 font-medium hover:text-primary"
+                    routerLink="/directory">Directory</a>
+                <span class="text-[#617289] dark:text-gray-400">/</span>
+                <span class="text-primary font-medium">Organizational Chart</span>
+            </div>
+            <!-- Heading + Actions -->
+            <div class="flex flex-col md:flex-row justify-between md:items-end gap-4">
+                <div class="flex flex-col gap-2">
+                    <h1
+                        class="text-[#111418] dark:text-white text-3xl md:text-4xl font-black leading-tight tracking-[-0.033em]">
+                        Organizational Structure
+                    </h1>
+                    <p class="text-[#617289] dark:text-gray-400 text-base font-normal">
+                        Explore the hierarchy and reporting lines of Alenia IBERIA.
+                    </p>
+                </div>
+                <div class="flex gap-3">
+                    <button (click)="printChart()"
+                        class="flex items-center gap-2 px-4 h-10 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-[#111418] dark:text-white text-sm font-bold shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                        aria-label="Print chart">
+                        <span class="material-symbols-outlined text-[20px]">print</span>
+                        <span>Print</span>
+                    </button>
+                    <button (click)="exportPdf()"
+                        class="flex items-center gap-2 px-4 h-10 rounded-lg bg-primary text-white text-sm font-bold shadow-md hover:bg-blue-600 transition-colors"
+                        aria-label="Export to PDF">
+                        <span class="material-symbols-outlined text-[20px]">download</span>
+                        <span>Export PDF</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOOLBAR: Search & Filters -->
+    <div
+        class="sticky top-0 z-40 bg-white/95 dark:bg-[#111418]/95 backdrop-blur-sm border-b border-[#f0f2f4] dark:border-gray-800 px-6 md:px-10 py-3">
+        <div class="max-w-[1400px] mx-auto w-full flex flex-col md:flex-row gap-4 items-center justify-between">
+            <!-- Search -->
+            <div class="w-full md:w-auto md:flex-1 max-w-lg">
+                <label
+                    class="flex w-full items-stretch rounded-lg h-10 bg-[#f0f2f4] dark:bg-gray-800 overflow-hidden ring-1 ring-transparent focus-within:ring-primary transition-shadow">
+                    <div class="text-[#617289] dark:text-gray-400 flex items-center justify-center pl-3">
+                        <span class="material-symbols-outlined">search</span>
+                    </div>
+                    <input [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange()"
+                        class="flex w-full min-w-0 flex-1 border-none bg-transparent h-full px-3 text-[#111418] dark:text-white placeholder:text-[#617289] dark:placeholder:text-gray-500 focus:outline-none focus:ring-0 text-sm font-normal"
+                        placeholder="Find employee, role, or department..." aria-label="Search employees" />
+                </label>
+            </div>
+            <!-- Chips -->
+            <div class="w-full md:w-auto flex gap-2 overflow-x-auto pb-1 md:pb-0">
+                <button *ngFor="let dept of departments" (click)="selectDepartment(dept)"
+                    class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-lg px-3 transition-colors"
+                    [ngClass]="dept === activeDepartment
+                  ? 'bg-primary text-white shadow-sm'
+                  : 'bg-[#f0f2f4] dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700'"
+                    [attr.aria-label]="'Filter by ' + dept" [attr.aria-pressed]="dept === activeDepartment">
+                    <span class="text-xs" [class.font-bold]="dept === activeDepartment"
+                        [class.font-medium]="dept !== activeDepartment"
+                        [ngClass]="dept !== activeDepartment ? 'text-[#111418] dark:text-gray-200' : ''">
+                        {{ dept }}
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- EMPTY STATE -->
+    <div *ngIf="!hasResults" class="flex-1 flex items-center justify-center py-24">
+        <div class="text-center">
+            <span
+                class="material-symbols-outlined text-6xl text-gray-300 dark:text-gray-600 mb-4 block">search_off</span>
+            <h3 class="text-lg font-bold text-[#111418] dark:text-white mb-1">No results found</h3>
+            <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">
+                No employees match your current search or filter criteria.
+            </p>
+            <button (click)="searchQuery = ''; activeDepartment = 'All Departments'; applyFilters()"
+                class="px-4 py-2 bg-primary text-white text-sm font-semibold rounded-lg hover:bg-blue-600 transition-colors"
+                aria-label="Clear all filters">
+                Clear Filters
+            </button>
+        </div>
+    </div>
+
+    <!-- ORG CHART CANVAS -->
+    <div *ngIf="hasResults" class="flex-1 bg-[#f8f9fa] dark:bg-[#0b1016] overflow-auto relative select-none"
+        [class.cursor-grab]="!isPanning" [class.cursor-grabbing]="isPanning" (mousedown)="onMouseDown($event)"
+        style="min-height: 500px; padding: 40px;">
+
+        <!-- Dot Pattern Background -->
+        <div class="absolute inset-0 opacity-[0.03] dark:opacity-[0.05] pointer-events-none dot-pattern"></div>
+
+        <!-- Chart Container centered -->
+        <div class="min-w-max mx-auto flex flex-col items-center pb-20 origin-top transition-transform duration-200 org-chart-canvas"
+            [style.transform]="transformStyle" id="zoom-container">
+
+            <!-- ======================== ROOT LEVEL: CEO ======================== -->
+            <div class="tree-level is-root pt-0" *ngIf="filteredTree">
+                <div class="tree-node-wrapper">
+                    <!-- CEO Card -->
+                    <div
+                        class="relative group flex flex-col items-center bg-white dark:bg-[#1a202c] rounded-xl shadow-sm hover:shadow-lg border-t-4 border-primary p-4 w-64 transition-all duration-300 transform hover:-translate-y-1 z-10">
+                        <div class="absolute top-3 right-3">
+                            <span
+                                class="material-symbols-outlined text-gray-400 hover:text-primary cursor-pointer text-[20px]">more_vert</span>
+                        </div>
+                        <div class="size-16 rounded-full overflow-hidden border-2 border-primary mb-3 shadow-sm">
+                            <img class="w-full h-full object-cover" [src]="filteredTree.avatarUrl"
+                                [alt]="filteredTree.fullName" />
+                        </div>
+                        <h3 class="text-[#111418] dark:text-white font-bold text-lg leading-tight">{{
+                            filteredTree.fullName }}</h3>
+                        <p class="text-primary font-medium text-sm">{{ filteredTree.title }}</p>
+                        <div class="mt-3 flex gap-2">
+                            <button
+                                class="flex items-center justify-center size-8 rounded-full bg-blue-50 dark:bg-blue-900/30 text-primary hover:bg-primary hover:text-white transition-colors"
+                                aria-label="Send email">
+                                <span class="material-symbols-outlined text-[18px]">mail</span>
+                            </button>
+                            <button
+                                class="flex items-center justify-center size-8 rounded-full bg-blue-50 dark:bg-blue-900/30 text-primary hover:bg-primary hover:text-white transition-colors"
+                                aria-label="Call">
+                                <span class="material-symbols-outlined text-[18px]">call</span>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Connector Down from Root -->
+                    <div class="tree-connector-down"></div>
+                </div>
+            </div>
+
+            <!-- ======================== LEVEL 2: C-SUITE ======================== -->
+            <div class="tree-level" *ngIf="filteredTree && filteredTree.children.length > 0">
+
+                <div *ngFor="let cLevel of filteredTree.children" class="tree-node-wrapper">
+                    <div class="tree-node-connector-top"></div>
+
+                    <!-- C-Level Card -->
+                    <div class="relative group flex flex-col items-center bg-white dark:bg-[#1a202c] rounded-xl shadow-sm hover:shadow-lg border border-gray-100 dark:border-gray-700 p-4 w-56 transition-all duration-300 transform hover:-translate-y-1 z-10"
+                        [ngClass]="{ 'opacity-70 hover:opacity-100 grayscale hover:grayscale-0': !isExpanded(cLevel.id) && cLevel.children.length > 0 }">
+
+                        <!-- Expand/Collapse toggle -->
+                        <div *ngIf="cLevel.children.length > 0" (click)="toggleExpand(cLevel.id, $event)"
+                            class="absolute -bottom-3 bg-white dark:bg-gray-800 rounded-full shadow-sm border border-gray-200 dark:border-gray-600 size-6 flex items-center justify-center z-20 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700">
+                            <span class="material-symbols-outlined text-[16px] text-gray-600 dark:text-gray-300">
+                                {{ isExpanded(cLevel.id) ? 'remove' : 'add' }}
+                            </span>
+                        </div>
+
+                        <div class="size-12 rounded-full overflow-hidden border border-gray-200 mb-2">
+                            <img class="w-full h-full object-cover" [src]="cLevel.avatarUrl" [alt]="cLevel.fullName" />
+                        </div>
+                        <h3 class="text-[#111418] dark:text-white font-bold text-base leading-tight">{{ cLevel.fullName
+                            }}</h3>
+                        <p class="text-[#617289] dark:text-gray-400 font-medium text-xs">{{ cLevel.title }}</p>
+                        <span class="mt-2 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider"
+                            [ngClass]="getBadgeClasses(cLevel.department)">
+                            {{ cLevel.department }}
+                        </span>
+                    </div>
+
+                    <!-- Connector down from C-Level (short if collapsed, taller if expanded) -->
+                    <div class="tree-connector-down"
+                        [ngClass]="isExpanded(cLevel.id) && cLevel.children.length > 0 ? 'h-10' : 'h-4'"></div>
+
+                    <!-- ======================== LEVEL 3: MANAGERS (if expanded) ======================== -->
+                    <div *ngIf="isExpanded(cLevel.id) && cLevel.children.length > 0" class="flex pt-0 justify-center">
+
+                        <div *ngFor="let manager of cLevel.children" class="tree-node-wrapper px-4">
+                            <div class="tree-node-connector-top"></div>
+
+                            <!-- Manager Card (horizontal layout) -->
+                            <div
+                                class="relative group flex flex-col items-start bg-white dark:bg-[#1a202c] rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 p-3 w-48 hover:border-primary/50 transition-colors">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="size-10 rounded-full overflow-hidden border border-gray-100">
+                                        <img class="w-full h-full object-cover" [src]="manager.avatarUrl"
+                                            [alt]="manager.fullName" />
+                                    </div>
+                                    <div>
+                                        <h4 class="text-[#111418] dark:text-white font-semibold text-sm">{{
+                                            manager.fullName }}</h4>
+                                        <p class="text-[#617289] dark:text-gray-400 text-[10px]">{{ manager.title }}</p>
+                                    </div>
+                                </div>
+                                <div
+                                    class="w-full flex justify-between items-center border-t border-gray-50 dark:border-gray-700 pt-2 mt-1">
+                                    <span class="flex items-center gap-1 text-[10px] text-gray-500">
+                                        <span class="material-symbols-outlined text-[12px]">group</span>
+                                        {{ manager.reportsCount }} Reports
+                                    </span>
+                                    <span class="size-2 rounded-full" [ngClass]="{
+                          'bg-green-500': manager.statusColor === 'green',
+                          'bg-yellow-500': manager.statusColor === 'yellow',
+                          'bg-gray-400': manager.statusColor === 'gray'
+                        }"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- FLOATING CONTROLS -->
+        <div class="fixed bottom-8 right-8 flex flex-col gap-2 z-50">
+            <button (click)="zoomIn()"
+                class="size-10 flex items-center justify-center bg-white dark:bg-[#1a202c] text-[#111418] dark:text-white rounded-full shadow-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                title="Zoom In" aria-label="Zoom in">
+                <span class="material-symbols-outlined">add</span>
+            </button>
+            <button (click)="zoomOut()"
+                class="size-10 flex items-center justify-center bg-white dark:bg-[#1a202c] text-[#111418] dark:text-white rounded-full shadow-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                title="Zoom Out" aria-label="Zoom out">
+                <span class="material-symbols-outlined">remove</span>
+            </button>
+            <button (click)="resetView()"
+                class="size-10 flex items-center justify-center bg-white dark:bg-[#1a202c] text-[#111418] dark:text-white rounded-full shadow-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                title="Reset View" aria-label="Reset view">
+                <span class="material-symbols-outlined">center_focus_strong</span>
+            </button>
+        </div>
+
+        <!-- MINI MAP OVERLAY -->
+        <div
+            class="fixed bottom-8 left-8 w-48 h-32 bg-white/90 dark:bg-[#1a202c]/90 backdrop-blur border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50 hidden md:block overflow-hidden">
+            <div class="w-full h-full relative opacity-50 p-2">
+                <div class="absolute top-2 left-[50%] -translate-x-1/2 w-8 h-4 bg-gray-400 rounded-sm"></div>
+                <div class="absolute top-8 left-2 right-2 h-[1px] bg-gray-300"></div>
+                <div class="absolute top-10 left-4 w-6 h-3 bg-primary rounded-sm"></div>
+                <div class="absolute top-10 left-16 w-6 h-3 bg-gray-300 rounded-sm"></div>
+                <div class="absolute top-10 left-28 w-6 h-3 bg-gray-300 rounded-sm"></div>
+                <div class="absolute top-10 right-4 w-6 h-3 bg-gray-300 rounded-sm"></div>
+                <!-- Viewport indicator -->
+                <div
+                    class="absolute top-0 left-0 w-24 h-16 border-2 border-primary rounded-md translate-x-4 translate-y-4">
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</ng-container>

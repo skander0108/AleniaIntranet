@@ -1,0 +1,114 @@
+/* ===== ORG CHART TREE CONNECTORS ===== */
+
+.tree-level {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    padding-top: 20px;
+}
+
+.tree-node-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    padding: 0 15px;
+}
+
+/* Vertical line from parent down to children area */
+.tree-connector-down {
+    width: 2px;
+    height: 20px;
+    background-color: #cbd5e1;
+}
+
+/* Vertical line dropping to the node itself */
+.tree-node-connector-top {
+    width: 2px;
+    height: 20px;
+    background-color: #cbd5e1;
+}
+
+/* Horizontal lines connecting siblings */
+.tree-node-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 50%;
+    width: 50%;
+    height: 2px;
+    background-color: #cbd5e1;
+}
+
+.tree-node-wrapper::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 50%;
+    height: 2px;
+    background-color: #cbd5e1;
+}
+
+/* First child: no line extending to the left */
+.tree-node-wrapper:first-child::before {
+    display: none;
+}
+
+/* Last child: no line extending to the right */
+.tree-node-wrapper:last-child::after {
+    display: none;
+}
+
+/* Only child: no horizontal lines */
+.tree-node-wrapper:only-child::before,
+.tree-node-wrapper:only-child::after {
+    display: none;
+}
+
+/* Hide connectors for the very root */
+.is-root>.tree-node-wrapper::before,
+.is-root>.tree-node-wrapper::after {
+    display: none;
+}
+
+/* Hide top connector for root */
+.is-root>.tree-node-wrapper>.tree-node-connector-top {
+    display: none;
+}
+
+/* ===== CANVAS ===== */
+
+.org-chart-canvas {
+    will-change: transform;
+}
+
+/* Dot pattern background */
+.dot-pattern {
+    background-image: radial-gradient(#111418 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
+/* ===== GRAB CURSORS ===== */
+
+.cursor-grab {
+    cursor: grab;
+}
+
+.cursor-grabbing {
+    cursor: grabbing !important;
+}
+
+/* Prevent text selection while panning */
+.select-none {
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+/* ===== RESPONSIVE ===== */
+
+@media (max-width: 768px) {
+    .org-chart-canvas {
+        min-width: 900px;
+    }
+}

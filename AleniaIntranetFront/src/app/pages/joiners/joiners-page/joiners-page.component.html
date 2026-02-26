@@ -1,0 +1,305 @@
+<div class="flex flex-col flex-1 w-full max-w-[1200px] px-4 md:px-10 py-6 md:py-10 mx-auto">
+    <!-- Breadcrumbs -->
+    <div class="flex flex-wrap gap-2 pb-4">
+        <a class="text-[#617289] dark:text-slate-400 text-sm font-medium leading-normal hover:text-primary"
+            routerLink="/">Home</a>
+        <span class="text-[#617289] dark:text-slate-400 text-sm font-medium leading-normal">/</span>
+        <span class="text-[#111418] dark:text-white text-sm font-medium leading-normal">Employee Directory</span>
+    </div>
+
+    <!-- Page Heading -->
+    <div class="flex flex-wrap justify-between gap-3 pb-6">
+        <div class="flex flex-col min-w-72 gap-2">
+            <h1
+                class="text-[#111418] dark:text-white text-3xl md:text-4xl font-black leading-tight tracking-[-0.033em]">
+                New Joiners & Directory
+            </h1>
+            <p class="text-[#617289] dark:text-slate-400 text-base font-normal leading-normal">
+                Welcome the {{ totalElements }} new colleagues joining Alenia IBERIA.
+            </p>
+        </div>
+        <div class="flex items-end gap-2">
+            <button *ngIf="isManager" (click)="openFormModal()"
+                class="bg-primary hover:bg-blue-700 text-white h-10 px-4 rounded-lg text-sm font-bold flex items-center gap-2 transition-colors">
+                <span class="material-symbols-outlined text-[20px]">add</span>
+                Add New Joiner
+            </button>
+        </div>
+    </div>
+
+    <!-- Search & Filter Bar -->
+    <div class="bg-white dark:bg-slate-900 rounded-xl p-4 shadow-sm border border-slate-200 dark:border-slate-800 mb-8">
+        <div class="flex flex-col lg:flex-row gap-4">
+            <!-- Text Inputs -->
+            <div class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="relative group">
+                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
+                        <span class="material-symbols-outlined">search</span>
+                    </span>
+                    <input
+                        class="w-full h-12 pl-11 pr-4 rounded-lg bg-[#f0f2f4] dark:bg-slate-800 border-none text-[#111418] dark:text-white placeholder:text-slate-500 focus:ring-2 focus:ring-primary focus:bg-white dark:focus:bg-slate-900 transition-all"
+                        placeholder="Search by Name, Role..." [formControl]="searchControl" />
+                </div>
+                <div class="relative">
+                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
+                        <span class="material-symbols-outlined">domain</span>
+                    </span>
+                    <input
+                        class="w-full h-12 pl-11 pr-4 rounded-lg bg-[#f0f2f4] dark:bg-slate-800 border-none text-[#111418] dark:text-white placeholder:text-slate-500 focus:ring-2 focus:ring-primary focus:bg-white dark:focus:bg-slate-900 transition-all"
+                        placeholder="Department" [formControl]="departmentControl" />
+                </div>
+            </div>
+            <!-- Chips/Filters -->
+            <div class="flex items-center gap-2 overflow-x-auto pb-2 lg:pb-0 no-scrollbar">
+                <span class="text-sm font-medium text-slate-500 whitespace-nowrap pl-2">Filter by:</span>
+                <button (click)="filterLocation(null)" [class.bg-primary]="!currentLocation"
+                    [class.text-white]="!currentLocation" [class.bg-[#f0f2f4]]="currentLocation"
+                    [class.text-[#111418]]="currentLocation"
+                    class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg pl-4 pr-3 transition-colors">
+                    <span class="text-sm font-medium leading-normal">All Locations</span>
+                </button>
+                <button *ngFor="let loc of locations" (click)="filterLocation(loc)"
+                    [class.bg-primary]="currentLocation === loc" [class.text-white]="currentLocation === loc"
+                    [class.bg-[#f0f2f4]]="currentLocation !== loc" [class.text-[#111418]]="currentLocation !== loc"
+                    class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg pl-4 pr-3 transition-colors dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700">
+                    <span class="text-sm font-medium leading-normal">{{ loc }}</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Employee Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <!-- Card -->
+        <div *ngFor="let joiner of joiners" (click)="openDetailModal(joiner)"
+            class="group bg-white dark:bg-slate-900 rounded-xl p-5 border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-md hover:border-primary/30 transition-all duration-200 flex flex-col gap-4 cursor-pointer">
+            <div class="flex items-start justify-between">
+                <div class="relative">
+                    <div class="size-16 rounded-full bg-cover bg-center bg-gray-200"
+                        [style.background-image]="getPhotoUrl(joiner)"></div>
+                </div>
+                <button *ngIf="isManager" (click)="$event.stopPropagation(); openFormModal(joiner)"
+                    class="text-slate-400 hover:text-primary transition-colors">
+                    <span class="material-symbols-outlined">edit</span>
+                </button>
+            </div>
+            <div>
+                <h3 class="text-lg font-bold text-[#111418] dark:text-white group-hover:text-primary transition-colors">
+                    {{ joiner.fullName }}
+                </h3>
+                <p class="text-sm font-medium text-slate-500 dark:text-slate-400">{{ joiner.jobTitle }}</p>
+                <div
+                    class="mt-2 flex items-center gap-1 text-xs font-medium text-primary bg-primary/10 w-fit px-2 py-1 rounded">
+                    {{ joiner.department }}
+                </div>
+            </div>
+            <div class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mt-auto pt-2">
+                <span class="material-symbols-outlined text-[18px]">location_on</span>
+                <span>{{ joiner.location || 'Remote' }}</span>
+            </div>
+            <div class="grid grid-cols-3 gap-2 mt-2 pt-4 border-t border-slate-100 dark:border-slate-800">
+                <button
+                    class="flex items-center justify-center h-9 rounded bg-[#f0f2f4] dark:bg-slate-800 hover:bg-primary/20 hover:text-primary text-slate-700 dark:text-slate-300 transition-colors"
+                    title="View Details">
+                    <span class="material-symbols-outlined text-[20px]">visibility</span>
+                </button>
+                <button *ngIf="joiner.cvFileId"
+                    (click)="$event.stopPropagation(); downloadCv(joiner.id, joiner.cvFileName)"
+                    class="flex items-center justify-center h-9 rounded bg-[#f0f2f4] dark:bg-slate-800 hover:bg-primary/20 hover:text-primary text-slate-700 dark:text-slate-300 transition-colors"
+                    title="Download CV">
+                    <span class="material-symbols-outlined text-[20px]">description</span>
+                </button>
+                <button
+                    class="flex items-center justify-center h-9 rounded bg-[#f0f2f4] dark:bg-slate-800 hover:bg-primary/20 hover:text-primary text-slate-700 dark:text-slate-300 transition-colors"
+                    title="Contact">
+                    <span class="material-symbols-outlined text-[20px]">chat</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="joiners.length === 0" class="flex flex-col items-center justify-center py-20 text-slate-500">
+        <span class="material-symbols-outlined text-6xl mb-4">group_off</span>
+        <p class="text-lg font-medium">No new joiners found.</p>
+    </div>
+
+    <!-- Pagination -->
+    <div *ngIf="totalPages > 1" class="flex justify-center mt-12 mb-8">
+        <div class="flex items-center gap-2">
+            <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 0"
+                class="flex items-center justify-center size-10 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed">
+                <span class="material-symbols-outlined">chevron_left</span>
+            </button>
+            <span class="text-sm font-medium text-slate-600 dark:text-slate-300">
+                Page {{ currentPage + 1 }} of {{ totalPages }}
+            </span>
+            <button (click)="changePage(currentPage + 1)" [disabled]="currentPage >= totalPages - 1"
+                class="flex items-center justify-center size-10 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed">
+                <span class="material-symbols-outlined">chevron_right</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Details Modal -->
+<div *ngIf="selectedJoiner && !isFormModalOpen"
+    class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+    (click)="closeDetailModal()">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-2xl shadow-xl overflow-hidden animate-in fade-in zoom-in duration-200"
+        (click)="$event.stopPropagation()">
+        <!-- Header -->
+        <div class="relative h-32 bg-primary/10">
+            <button (click)="closeDetailModal()"
+                class="absolute top-4 right-4 p-2 rounded-full bg-white/20 hover:bg-white/40 text-slate-700 dark:text-slate-300 transition-colors">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <!-- Body -->
+        <div class="px-8 pb-8 -mt-12">
+            <div class="relative size-24 rounded-full border-4 border-white dark:border-slate-900 bg-cover bg-center bg-gray-200 mb-4"
+                [style.background-image]="getPhotoUrl(selectedJoiner)"></div>
+
+            <div class="flex justify-between items-start">
+                <div>
+                    <h2 class="text-2xl font-bold text-[#111418] dark:text-white">{{ selectedJoiner.fullName }}</h2>
+                    <p class="text-primary font-medium">{{ selectedJoiner.jobTitle }}</p>
+                    <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">{{ selectedJoiner.department }} • {{
+                        selectedJoiner.location }}</p>
+                    <p class="text-slate-500 dark:text-slate-400 text-sm">Started {{ selectedJoiner.startDate | date }}
+                    </p>
+                </div>
+                <div class="flex gap-2">
+                    <button *ngIf="selectedJoiner.cvFileId"
+                        (click)="downloadCv(selectedJoiner.id, selectedJoiner.cvFileName)"
+                        class="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-700 transition-colors">
+                        <span class="material-symbols-outlined">download</span>
+                        Download CV
+                    </button>
+                </div>
+            </div>
+
+            <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="p-4 rounded-xl bg-[#f0f2f4] dark:bg-slate-800/50">
+                    <h4 class="font-bold text-sm text-[#111418] dark:text-white mb-3 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">contact_page</span>
+                        Contact Info
+                    </h4>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined text-slate-400">mail</span>
+                            <span class="text-slate-600 dark:text-slate-300">email@example.com</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined text-slate-400">call</span>
+                            <span class="text-slate-600 dark:text-slate-300">+34 123 456 789</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-4 rounded-xl bg-[#f0f2f4] dark:bg-slate-800/50" *ngIf="selectedJoiner.cvFileId">
+                    <h4 class="font-bold text-sm text-[#111418] dark:text-white mb-3 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">attachment</span>
+                        Attached Files
+                    </h4>
+                    <div
+                        class="flex items-center justify-between p-3 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
+                        <div class="flex items-center gap-3 overflow-hidden">
+                            <div
+                                class="size-10 rounded bg-red-100 text-red-600 flex items-center justify-center shrink-0">
+                                <span class="material-symbols-outlined">picture_as_pdf</span>
+                            </div>
+                            <div class="flex flex-col overflow-hidden">
+                                <span class="text-sm font-medium truncate text-[#111418] dark:text-white">{{
+                                    selectedJoiner.cvFileName }}</span>
+                                <span class="text-xs text-slate-500">{{ (selectedJoiner.cvSizeBytes || 0) / 1024 |
+                                    number:'1.0-2' }} KB</span>
+                            </div>
+                        </div>
+                        <button (click)="downloadCv(selectedJoiner.id, selectedJoiner.cvFileName)"
+                            class="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-full transition-colors text-primary">
+                            <span class="material-symbols-outlined">download</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Form Modal (Standalone Component Container or Inline) -->
+<!-- For simplicity and speed, I'll put the form here too, toggled by safe checks. In a larger app, I'd separate it. -->
+<div *ngIf="isFormModalOpen"
+    class="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+    (click)="closeFormModal()">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-lg shadow-xl overflow-hidden"
+        (click)="$event.stopPropagation()">
+        <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center">
+            <h3 class="text-lg font-bold text-[#111418] dark:text-white">{{ editingJoiner ? 'Edit Joiner' : 'Add New
+                Joiner' }}</h3>
+            <button (click)="closeFormModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <form [formGroup]="joinerForm" (ngSubmit)="saveJoiner()" class="p-6 space-y-4">
+            <div class="space-y-1">
+                <label class="text-sm font-medium text-[#111418] dark:text-white">Full Name</label>
+                <input formControlName="fullName" type="text"
+                    class="w-full h-10 px-3 rounded-lg bg-[#f0f2f4] dark:bg-slate-800 border-none focus:ring-2 focus:ring-primary"
+                    placeholder="e.g. John Doe">
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="space-y-1">
+                    <label class="text-sm font-medium text-[#111418] dark:text-white">Job Title</label>
+                    <input formControlName="jobTitle" type="text"
+                        class="w-full h-10 px-3 rounded-lg bg-[#f0f2f4] dark:bg-slate-800 border-none focus:ring-2 focus:ring-primary">
+                </div>
+                <div class="space-y-1">
+                    <label class="text-sm font-medium text-[#111418] dark:text-white">Department</label>
+                    <input formControlName="department" type="text"
+                        class="w-full h-10 px-3 rounded-lg bg-[#f0f2f4] dark:bg-slate-800 border-none focus:ring-2 focus:ring-primary">
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="space-y-1">
+                    <label class="text-sm font-medium text-[#111418] dark:text-white">Start Date</label>
+                    <input formControlName="startDate" type="date"
+                        class="w-full h-10 px-3 rounded-lg bg-[#f0f2f4] dark:bg-slate-800 border-none focus:ring-2 focus:ring-primary">
+                </div>
+                <div class="space-y-1">
+                    <label class="text-sm font-medium text-[#111418] dark:text-white">Location</label>
+                    <select formControlName="location"
+                        class="w-full h-10 px-3 rounded-lg bg-[#f0f2f4] dark:bg-slate-800 border-none focus:ring-2 focus:ring-primary">
+                        <option value="">Select...</option>
+                        <option *ngFor="let loc of locations" [value]="loc">{{ loc }}</option>
+                        <option value="Remote">Remote</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Uploads -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="space-y-1">
+                    <label class="text-sm font-medium text-[#111418] dark:text-white">Profile Photo</label>
+                    <input type="file" (change)="onPhotoSelected($event)" accept="image/*"
+                        class="text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20">
+                </div>
+                <div class="space-y-1">
+                    <label class="text-sm font-medium text-[#111418] dark:text-white">CV (PDF/DOC)</label>
+                    <input type="file" (change)="onCvSelected($event)" accept=".pdf,.doc,.docx"
+                        class="text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20">
+                </div>
+            </div>
+
+            <div class="pt-4 flex justify-end gap-3">
+                <button type="button" (click)="closeFormModal()"
+                    class="px-4 py-2 rounded-lg font-bold text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 transition-colors">Cancel</button>
+                <button type="submit" [disabled]="joinerForm.invalid || isSaving"
+                    class="px-4 py-2 rounded-lg font-bold bg-primary text-white hover:bg-blue-700 transition-colors disabled:opacity-50 flex items-center gap-2">
+                    <span *ngIf="isSaving"
+                        class="size-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                    {{ editingJoiner ? 'Update Joiner' : 'Create Joiner' }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

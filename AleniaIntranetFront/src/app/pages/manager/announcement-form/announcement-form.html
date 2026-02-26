@@ -1,0 +1,124 @@
+<div class="container mx-auto px-4 py-8 max-w-2xl">
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-800">{{ isEditMode ? 'Edit' : 'Create' }} Announcement</h1>
+    </div>
+
+    <div *ngIf="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
+        role="alert">
+        <span class="block sm:inline">{{ error }}</span>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="title">
+                Title
+            </label>
+            <input formControlName="title"
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="title" type="text" placeholder="Announcement Title">
+        </div>
+
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="content">
+                Content
+            </label>
+            <textarea formControlName="content"
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="content" rows="6" placeholder="Announcement Content"></textarea>
+        </div>
+
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="summary">
+                Summary (Optional)
+            </label>
+            <textarea formControlName="summary"
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="summary" rows="2" placeholder="Brief summary"></textarea>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 mb-4">
+            <div>
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="status">
+                    Status
+                </label>
+                <select formControlName="status"
+                    class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="status">
+                    <option value="DRAFT">Draft</option>
+                    <option value="PUBLISHED">Published</option>
+                    <option value="ARCHIVED">Archived</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="category">
+                    Category
+                </label>
+                <select formControlName="category"
+                    class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="category">
+                    <option value="NEWS">News</option>
+                    <option value="Event">Event</option>
+                    <option value="Maintenance">Maintenance</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 mb-4">
+            <div>
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="priority">
+                    Priority
+                </label>
+                <select formControlName="priority"
+                    class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="priority">
+                    <option value="NORMAL">Normal</option>
+                    <option value="IMPORTANT">Important</option>
+                    <option value="URGENT">Urgent</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="targetAudience">
+                    Target Audience
+                </label>
+                <select formControlName="targetAudience"
+                    class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="targetAudience">
+                    <option value="ALL">All Employees</option>
+                    <option value="TEAM">My Team</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="mb-6">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="image">
+                Announcement Image
+            </label>
+            <div class="flex items-center space-x-4">
+                <input type="file" (change)="onFileSelected($event)" accept="image/*"
+                    class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100" />
+                <span *ngIf="uploading" class="text-sm text-indigo-600">Uploading...</span>
+            </div>
+
+            <!-- Image Preview -->
+            <div *ngIf="previewImageUrl" class="mt-4">
+                <p class="text-sm text-gray-600 mb-2">Current Image:</p>
+                <img [src]="previewImageUrl" alt="Preview" class="h-48 w-auto object-cover rounded-lg shadow-sm border">
+                <input type="hidden" formControlName="imageUrl">
+            </div>
+        </div>
+
+        <div class="flex items-center justify-between">
+            <button [disabled]="loading || form.invalid"
+                class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:opacity-50"
+                type="submit">
+                {{ isEditMode ? 'Update' : 'Create' }}
+            </button>
+            <a routerLink="/manager"
+                class="inline-block align-baseline font-bold text-sm text-indigo-600 hover:text-indigo-800">
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>

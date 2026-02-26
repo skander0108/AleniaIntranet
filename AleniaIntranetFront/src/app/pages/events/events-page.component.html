@@ -1,0 +1,252 @@
+<div class="px-4 md:px-10 lg:px-20 xl:px-40 flex flex-1 justify-center py-5 min-h-screen">
+    <div class="layout-content-container flex flex-col w-full flex-1 gap-6">
+        <!-- Breadcrumbs -->
+        <div class="flex flex-wrap gap-2 px-4">
+            <a class="text-[#617289] hover:text-primary text-sm font-medium leading-normal transition-colors"
+                routerLink="/">Home</a>
+            <span class="text-[#617289] text-sm font-medium leading-normal">/</span>
+            <span class="text-[#111418] dark:text-white text-sm font-medium leading-normal">Events</span>
+        </div>
+
+        <!-- Page Heading -->
+        <div class="flex flex-wrap justify-between items-end gap-3 px-4">
+            <div class="flex min-w-72 flex-col gap-2">
+                <h1
+                    class="text-[#111418] dark:text-white text-3xl md:text-4xl font-black leading-tight tracking-[-0.033em]">
+                    Eventhub
+                </h1>
+                <p class="text-[#617289] text-base font-normal leading-normal max-w-2xl">
+                    Stay updated with the latest events, trainings, and social gatherings at Alenia IBERIA.
+                </p>
+            </div>
+            <!-- Manager Action -->
+            <button *ngIf="isManager" routerLink="/manager/events/create"
+                class="flex items-center justify-center gap-2 overflow-hidden rounded-lg h-10 px-4 bg-white dark:bg-gray-800 border border-[#e5e7eb] dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 text-[#111418] dark:text-white text-sm font-bold leading-normal transition-all shadow-sm group">
+                <span class="truncate">Create Event</span>
+                <span
+                    class="material-symbols-outlined text-[18px] text-[#617289] group-hover:text-primary transition-colors">add_circle</span>
+            </button>
+        </div>
+
+        <!-- Hero Section (Featured Event) -->
+        <div *ngIf="featuredEvent" class="px-4">
+            <div class="relative overflow-hidden rounded-xl shadow-lg group cursor-pointer"
+                (click)="onEventClick(featuredEvent)">
+                <div class="flex min-h-[400px] flex-col gap-6 bg-cover bg-center bg-no-repeat items-start justify-end px-6 pb-10 md:px-10 md:pb-12 transition-transform duration-700 group-hover:scale-[1.02]"
+                    [style.background-image]="'linear-gradient(rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.7) 100%), url(' + (featuredEvent.imageUrl || 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80') + ')'">
+                    <div class="flex flex-col gap-2 text-left max-w-3xl">
+                        <div
+                            class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/90 w-fit backdrop-blur-sm shadow-sm">
+                            <span class="material-symbols-outlined text-white text-[16px]">star</span>
+                            <span class="text-white text-xs font-bold uppercase tracking-wider">Featured Event</span>
+                        </div>
+                        <h2 class="text-white text-3xl md:text-5xl font-black leading-tight tracking-[-0.033em]">
+                            {{ featuredEvent.title }}
+                        </h2>
+                        <p class="text-gray-200 text-base md:text-lg font-normal leading-normal line-clamp-2">
+                            {{ featuredEvent.description }}
+                        </p>
+                    </div>
+                    <div class="flex gap-3 mt-2" (click)="$event.stopPropagation()">
+                        <button *ngIf="!featuredEvent.isRegistered" (click)="registerForEvent(featuredEvent, $event)"
+                            class="flex cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-primary hover:bg-blue-600 text-white text-base font-bold leading-normal tracking-[0.015em] transition-colors shadow-md">
+                            <span class="truncate">Register Now</span>
+                        </button>
+                        <button *ngIf="featuredEvent.isRegistered" (click)="unregisterFromEvent(featuredEvent, $event)"
+                            class="flex cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-green-600 hover:bg-green-700 text-white text-base font-bold leading-normal tracking-[0.015em] transition-colors shadow-md">
+                            <span class="material-symbols-outlined mr-2">check</span>
+                            <span class="truncate">Registered</span>
+                        </button>
+                        <button (click)="onEventClick(featuredEvent)"
+                            class="flex cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-white/20 backdrop-blur-md hover:bg-white/30 text-white text-base font-bold leading-normal tracking-[0.015em] transition-colors border border-white/40">
+                            <span class="truncate">Details</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Layout -->
+        <div class="flex flex-col lg:flex-row gap-8 px-4 mt-4">
+            <!-- Left Column: Filters & Grid -->
+            <div class="flex-1 flex flex-col gap-6">
+                <!-- Filter Chips -->
+                <div
+                    class="flex gap-3 flex-wrap pb-2 border-b border-[#f0f2f4] dark:border-gray-800 sticky top-20 z-10 bg-gray-50/95 dark:bg-gray-900/95 backdrop-blur-sm py-2 -mx-4 px-4 lg:static lg:bg-transparent lg:p-0">
+                    <button *ngFor="let category of categories" (click)="filterByCategory(category)"
+                        [class.bg-[#111418]]="currentCategory === category"
+                        [class.dark:bg-white]="currentCategory === category"
+                        [class.text-white]="currentCategory === category"
+                        [class.dark:text-[#111418]]="currentCategory === category"
+                        [class.bg-white]="currentCategory !== category"
+                        [class.dark:bg-gray-800]="currentCategory !== category"
+                        [class.text-[#111418]]="currentCategory !== category"
+                        [class.dark:text-gray-300]="currentCategory !== category"
+                        class="flex h-9 items-center justify-center gap-x-2 rounded-full pl-3 pr-4 shadow-sm transition-all active:scale-95 border border-[#e5e7eb] dark:border-gray-700 hover:shadow-md">
+                        <span class="material-symbols-outlined text-[20px]">{{ getCategoryIcon(category) }}</span>
+                        <span class="text-sm font-medium">{{ category }}</span>
+                    </button>
+                </div>
+
+                <!-- Events Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                    <div *ngFor="let event of filteredEvents"
+                        class="group flex flex-col bg-white dark:bg-gray-800 rounded-xl overflow-hidden border border-[#e5e7eb] dark:border-gray-700 hover:shadow-lg transition-all duration-300 h-full">
+
+                        <!-- Card Image -->
+                        <div class="h-48 bg-gray-200 relative overflow-hidden cursor-pointer"
+                            (click)="onEventClick(event)">
+                            <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm dark:bg-gray-900/90 px-2 py-1 rounded text-xs font-bold uppercase tracking-wide shadow-sm z-10"
+                                [ngClass]="getCategoryColorClass(getCategory(event))">
+                                {{ getCategory(event) }}
+                            </div>
+                            <img [src]="event.imageUrl || 'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?ixlib=rb-4.0.3&auto=format&fit=crop&w=1769&q=80'"
+                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                [alt]="event.title">
+                        </div>
+
+                        <!-- Card Content -->
+                        <div class="p-5 flex flex-col flex-1">
+                            <div class="flex items-center gap-2 text-[#617289] text-xs font-medium mb-3">
+                                <span class="material-symbols-outlined text-[16px]">schedule</span>
+                                <span>{{ event.eventDate | date:'MMM d' }}, {{ event.eventTime }}</span>
+                                <span class="w-1 h-1 rounded-full bg-gray-300"></span>
+                                <span class="truncate max-w-[100px]">{{ event.location }}</span>
+                            </div>
+                            <h3 class="text-[#111418] dark:text-white text-lg font-bold leading-tight mb-2 group-hover:text-primary transition-colors cursor-pointer"
+                                (click)="onEventClick(event)">
+                                {{ event.title }}
+                            </h3>
+                            <p class="text-[#617289] text-sm leading-normal line-clamp-2 mb-4">
+                                {{ event.description }}
+                            </p>
+
+                            <!-- Card Actions -->
+                            <div class="mt-auto flex gap-2">
+                                <button *ngIf="!event.isRegistered" (click)="registerForEvent(event, $event)"
+                                    class="flex-1 h-9 rounded-lg border border-primary/20 bg-primary/5 text-primary hover:bg-primary hover:text-white flex items-center justify-center text-sm font-medium transition-colors">
+                                    Register
+                                </button>
+                                <button *ngIf="event.isRegistered" (click)="unregisterFromEvent(event, $event)"
+                                    class="flex-1 h-9 rounded-lg border border-red-200 bg-red-50 text-red-600 hover:bg-red-600 hover:text-white flex items-center justify-center text-sm font-medium transition-colors">
+                                    Unregister
+                                </button>
+                                <button
+                                    class="w-9 h-9 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-300 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                                    title="Add to Calendar">
+                                    <span class="material-symbols-outlined text-[20px]">calendar_add_on</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- No Events Empty State -->
+                    <div *ngIf="filteredEvents.length === 0"
+                        class="col-span-full py-12 flex flex-col items-center justify-center text-center">
+                        <div
+                            class="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4">
+                            <span class="material-symbols-outlined text-3xl text-gray-400">event_busy</span>
+                        </div>
+                        <h3 class="text-lg font-medium text-gray-900 dark:text-white">No events found</h3>
+                        <p class="text-gray-500">Try selecting a different category.</p>
+                        <button (click)="filterByCategory('All Events')"
+                            class="mt-4 text-primary font-medium hover:underline">
+                            View All Events
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Sidebar -->
+            <div class="lg:w-80 flex flex-col gap-6 shrink-0">
+                <!-- Interactive Calendar Widget -->
+                <div
+                    class="bg-white dark:bg-gray-800 rounded-xl p-5 border border-[#e5e7eb] dark:border-gray-700 shadow-sm">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-bold text-[#111418] dark:text-white">{{ currentMonthName }} {{ currentYear }}
+                        </h3>
+                        <div class="flex gap-1">
+                            <button (click)="prevMonth()"
+                                class="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors">
+                                <span class="material-symbols-outlined text-[18px]">chevron_left</span>
+                            </button>
+                            <button (click)="nextMonth()"
+                                class="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors">
+                                <span class="material-symbols-outlined text-[18px]">chevron_right</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-7 gap-1 text-center text-xs font-medium text-[#617289] mb-2">
+                        <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+                    </div>
+                    <div class="grid grid-cols-7 gap-1 text-center text-sm">
+                        <button *ngFor="let day of calendarDays"
+                            class="p-2 rounded-full relative w-8 h-8 flex items-center justify-center mx-auto transition-colors"
+                            [class.text-gray-300]="!day.isCurrentMonth" [class.bg-primary]="day.isToday"
+                            [class.text-white]="day.isToday" [class.hover:bg-gray-100]="!day.isToday"
+                            [class.dark:hover:bg-gray-700]="!day.isToday" [disabled]="!day.isCurrentMonth">
+                            {{ day.date.getDate() }}
+                            <span *ngIf="day.hasEvent" class="absolute bottom-0.5 w-1 h-1 bg-indigo-500 rounded-full"
+                                [class.bg-white]="day.isToday"></span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- My Registered Events Widget -->
+                <div
+                    class="bg-white dark:bg-gray-800 rounded-xl p-5 border border-[#e5e7eb] dark:border-gray-700 shadow-sm">
+                    <h3 class="font-bold text-[#111418] dark:text-white mb-4 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">confirmation_number</span>
+                        My Schedule
+                    </h3>
+                    <div class="flex flex-col gap-4 max-h-[300px] overflow-y-auto">
+                        <div *ngFor="let event of myEvents"
+                            class="flex gap-3 items-start group hover:bg-gray-50 dark:hover:bg-gray-700/50 p-2 -mx-2 rounded-lg transition-colors cursor-pointer">
+                            <div
+                                class="flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-700 rounded-lg min-w-[48px] h-[48px] shrink-0">
+                                <span class="text-xs text-gray-500 dark:text-gray-400 font-bold uppercase">{{
+                                    event.eventDate | date:'MMM' }}</span>
+                                <span class="text-lg font-bold text-[#111418] dark:text-white leading-none">{{
+                                    event.eventDate | date:'d' }}</span>
+                            </div>
+                            <div class="flex flex-col flex-1">
+                                <span
+                                    class="text-sm font-semibold text-[#111418] dark:text-white group-hover:text-primary line-clamp-1">{{
+                                    event.title }}</span>
+                                <span class="text-xs text-[#617289]">{{ event.eventTime }} • {{ event.location }}</span>
+                            </div>
+                            <!-- Small unregister action -->
+                            <button (click)="unregisterFromEvent(event, $event)"
+                                class="text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <span class="material-symbols-outlined text-[18px]">cancel</span>
+                            </button>
+                        </div>
+
+                        <div *ngIf="myEvents.length === 0" class="text-center py-4 text-sm text-gray-500">
+                            No upcoming events.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Create Event CTA -->
+                <div *ngIf="isManager"
+                    class="bg-gradient-to-br from-primary/10 to-transparent rounded-xl p-5 border border-primary/20">
+                    <div class="flex gap-3 mb-3">
+                        <div
+                            class="w-10 h-10 rounded-full bg-white dark:bg-gray-700 flex items-center justify-center text-primary shadow-sm">
+                            <span class="material-symbols-outlined">edit_calendar</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <h3 class="font-bold text-[#111418] dark:text-white">Organizing an event?</h3>
+                            <p class="text-xs text-[#617289]">Submit your event to the hub.</p>
+                        </div>
+                    </div>
+                    <button routerLink="/manager/events/create"
+                        class="w-full bg-white dark:bg-gray-700 border border-transparent hover:border-primary/50 text-[#111418] dark:text-white text-sm font-bold py-2 rounded-lg shadow-sm transition-all">
+                        Create Event Request
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
