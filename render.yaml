@@ -1,0 +1,48 @@
+# Render Blueprint — Deploy full stack (Angular + Spring Boot + PostgreSQL)
+# See: https://render.com/docs/blueprint-spec
+
+databases:
+  - name: iberia-db
+    plan: free
+    databaseName: iberia_intranet
+    user: postgres
+
+services:
+  # Spring Boot Backend
+  - type: web
+    name: iberia-backend
+    plan: free
+    runtime: docker
+    dockerfilePath: ./AleniaI_ntranet/Dockerfile
+    dockerContext: ./AleniaI_ntranet
+    envVars:
+      - key: SPRING_DATASOURCE_URL
+        fromDatabase:
+          name: iberia-db
+          property: connectionString
+      - key: SPRING_DATASOURCE_USERNAME
+        fromDatabase:
+          name: iberia-db
+          property: user
+      - key: SPRING_DATASOURCE_PASSWORD
+        fromDatabase:
+          name: iberia-db
+          property: password
+      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
+        value: validate
+      - key: PORT
+        value: 8080
+
+  # Angular Frontend (Nginx)
+  - type: web
+    name: iberia-frontend
+    plan: free
+    runtime: docker
+    dockerfilePath: ./AleniaIntranetFront/Dockerfile
+    dockerContext: ./AleniaIntranetFront
+    envVars:
+      - key: BACKEND_URL
+        fromService:
+          name: iberia-backend
+          type: web
+          property: hostport
