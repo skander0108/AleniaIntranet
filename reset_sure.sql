@@ -1,0 +1,1 @@
+UPDATE users SET password = '$2b$10$oy1.fGkLVxeuTxAMeYyIbOA.O8jHIegKPwfAD6NHCwJLnHrimMCvK' WHERE email IN ('admin@iberia.tn', 'collaborator@iberia.tn');

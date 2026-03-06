@@ -84,6 +84,12 @@ public class SecurityConfig {
                         .permitAll()
                         .requestMatchers("/error").permitAll()
 
+                        // WebSocket endpoint (auth handled by STOMP)
+                        .requestMatchers("/ws/**").permitAll()
+
+                        // Chat endpoints (authenticated users)
+                        .requestMatchers("/api/chat/**").authenticated()
+
                         // Admin-only endpoints
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
 
@@ -133,7 +139,8 @@ public class SecurityConfig {
 
         org.springframework.web.cors.CorsConfiguration configuration = new org.springframework.web.cors.CorsConfiguration();
 
-        configuration.setAllowedOrigins(java.util.List.of("http://localhost:4200")); // Allow Angular frontend
+        configuration.setAllowedOriginPatterns(java.util.List.of("*")); // Allow any origin pattern for Docker and
+                                                                        // LocalTunnel
 
         configuration.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 

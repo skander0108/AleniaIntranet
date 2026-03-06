@@ -6,6 +6,8 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { NewJoinerService } from '../../../core/services/new-joiner.service';
 import { NewJoiner } from '../../../core/models/new-joiner.model';
 import { AuthService } from '../../../core/services/auth.service';
+import { OrgNode } from '../../../core/models/org-chart.model';
+import { ORG_CHART_DATA, DEPARTMENTS } from '../../org-chart/org-chart-data';
 
 @Component({
     selector: 'app-joiners-page',
@@ -25,8 +27,15 @@ export class JoinersPageComponent implements OnInit {
 
     locations = ['Madrid', 'Lisbon', 'London', 'Remote'];
     currentLocation: string | null = null;
+    departments = DEPARTMENTS.filter(d => d !== 'All Departments');
 
     isManager = false;
+
+    // Org Chart Employees
+    allOrgEmployees: OrgNode[] = [];
+    filteredOrgEmployees: OrgNode[] = [];
+    selectedOrgEmployee: OrgNode | null = null;
+    private parentMap = new Map<string, OrgNode>();
 
     // Details Modal
     selectedJoiner: NewJoiner | null = null;
@@ -57,6 +66,7 @@ export class JoinersPageComponent implements OnInit {
     ngOnInit(): void {
         this.isManager = this.authService.hasRole('MANAGER') || this.authService.hasRole('ADMIN');
         this.loadJoiners();
+        this.loadOrgEmployees();
 
         // Setup search debounce
         this.searchControl.valueChanges.pipe(
@@ -65,6 +75,7 @@ export class JoinersPageComponent implements OnInit {
         ).subscribe(() => {
             this.currentPage = 0;
             this.loadJoiners();
+            this.filterOrgEmployees();
         });
 
         this.departmentControl.valueChanges.pipe(
@@ -73,7 +84,63 @@ export class JoinersPageComponent implements OnInit {
         ).subscribe(() => {
             this.currentPage = 0;
             this.loadJoiners();
+            this.filterOrgEmployees();
         });
+    }
+
+    // --- Org Chart Employees ---
+
+    private loadOrgEmployees(): void {
+        this.allOrgEmployees = [];
+        this.flattenTree(ORG_CHART_DATA, null);
+        this.filterOrgEmployees();
+    }
+
+    private flattenTree(node: OrgNode, parent: OrgNode | null): void {
+        this.allOrgEmployees.push(node);
+        if (parent) {
+            this.parentMap.set(node.id, parent);
+        }
+        for (const child of node.children || []) {
+            this.flattenTree(child, node);
+        }
+    }
+
+    filterOrgEmployees(): void {
+        const query = (this.searchControl.value || '').toLowerCase();
+        const dept = this.departmentControl.value || '';
+
+        this.filteredOrgEmployees = this.allOrgEmployees.filter(emp => {
+            const matchesQuery = !query ||
+                emp.fullName.toLowerCase().includes(query) ||
+                emp.title.toLowerCase().includes(query) ||
+                emp.department.toLowerCase().includes(query);
+            const matchesDept = !dept || emp.department === dept;
+            return matchesQuery && matchesDept;
+        });
+    }
+
+    getOrgPhotoUrl(emp: OrgNode): string {
+        return emp.avatarUrl
+            ? `url('${emp.avatarUrl}')`
+            : `url('https://ui-avatars.com/api/?name=${encodeURIComponent(emp.fullName)}&background=random')`;
+    }
+
+    getManagerOf(emp: OrgNode): OrgNode | null {
+        return this.parentMap.get(emp.id) || null;
+    }
+
+    openOrgDetailModal(emp: OrgNode): void {
+        this.selectedOrgEmployee = emp;
+        this.selectedJoiner = null;
+    }
+
+    closeOrgDetailModal(): void {
+        this.selectedOrgEmployee = null;
+    }
+
+    navigateToOrgEmployee(emp: OrgNode): void {
+        this.selectedOrgEmployee = emp;
     }
 
     loadJoiners(): void {

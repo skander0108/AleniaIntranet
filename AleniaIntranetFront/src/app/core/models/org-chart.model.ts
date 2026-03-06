@@ -6,5 +6,6 @@ export interface OrgNode {
     avatarUrl: string;
     statusColor: string;
     reportsCount: number;
+    clients?: string[];
     children: OrgNode[];
 }

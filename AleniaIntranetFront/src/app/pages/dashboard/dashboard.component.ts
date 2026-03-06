@@ -102,43 +102,25 @@ export class DashboardComponent {
                 description: 'Tech Help'
             };
 
-            const leaveTool: Tool = {
-                id: 'leave',
-                name: 'Leave',
-                url: '/leave',
-                icon: 'event_busy',
-                colorTheme: 'orange',
-                description: 'Time Off'
-            };
-
             const lmsTool: Tool = {
                 id: 'lms',
-                name: 'My Progress',
+                name: 'My Learning',
                 url: '/lms/my-progress',
                 icon: 'school',
                 colorTheme: 'green',
                 description: 'Training'
             };
 
-            const expenseTool: Tool = {
-                id: 'expenses',
-                name: 'Travel & Expenses',
-                url: '/expenses/my',
-                icon: 'receipt_long',
-                colorTheme: 'blue',
-                description: 'Expense Reports'
-            };
-
-            this.tools.set([...data, kbTool, itTool, leaveTool, lmsTool, expenseTool]);
+            this.tools.set([...data, kbTool, itTool, lmsTool]);
         });
         this.dashboardService.getNewsFeed().subscribe(data => {
             this.feed.set(data.map(a => ({
                 ...a,
                 description: a.summary || '',
-                time: new Date(a.publishedAt).toLocaleDateString(),
+                time: this.getRelativeTime(a.publishedAt),
                 badge: a.category || 'News',
-                type: 'info',
-                icon: 'article',
+                type: a.category?.toLowerCase() || 'news',
+                icon: this.getCategoryIcon(a.category),
                 image: this.formatImageUrl(a.imageUrl)
             } as UiAnnouncement)));
         });
@@ -183,11 +165,75 @@ export class DashboardComponent {
 
     getBadgeClass(type: string): string {
         const map: any = {
-            info: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300',
-            warning: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300',
-            success: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
+            hr: 'bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-300',
+            it: 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900/40 dark:text-cyan-300',
+            news: 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300',
+            policy: 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300',
+            events: 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300',
+            info: 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300',
+            warning: 'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300',
+            success: 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300'
         };
-        return map[type] || 'bg-gray-100 text-gray-800';
+        return map[type] || 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300';
+    }
+
+    getCategoryIcon(category?: string): string {
+        const cat = (category || '').toLowerCase();
+        const map: any = {
+            hr: 'groups',
+            it: 'dns',
+            news: 'campaign',
+            policy: 'gavel',
+            events: 'event',
+            training: 'school',
+            finance: 'account_balance'
+        };
+        return map[cat] || 'article';
+    }
+
+    getCategoryIconBg(category?: string): string {
+        const cat = (category || '').toLowerCase();
+        const map: any = {
+            hr: 'bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400',
+            it: 'bg-cyan-50 dark:bg-cyan-900/20 text-cyan-600 dark:text-cyan-400',
+            news: 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400',
+            policy: 'bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400',
+            events: 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400',
+            training: 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400',
+            finance: 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400'
+        };
+        return map[cat] || 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400';
+    }
+
+    getBorderAccentClass(category?: string): string {
+        const cat = (category || '').toLowerCase();
+        const map: any = {
+            hr: 'border-l-purple-500',
+            it: 'border-l-cyan-500',
+            news: 'border-l-blue-500',
+            policy: 'border-l-amber-500',
+            events: 'border-l-green-500',
+            training: 'border-l-green-500',
+            finance: 'border-l-emerald-500'
+        };
+        return map[cat] || 'border-l-blue-500';
+    }
+
+    getRelativeTime(dateStr: string): string {
+        const now = new Date();
+        const date = new Date(dateStr);
+        const diffMs = now.getTime() - date.getTime();
+        const diffMin = Math.floor(diffMs / 60000);
+        const diffHr = Math.floor(diffMs / 3600000);
+        const diffDay = Math.floor(diffMs / 86400000);
+
+        if (diffMin < 1) return 'Just now';
+        if (diffMin < 60) return `${diffMin}m ago`;
+        if (diffHr < 24) return `${diffHr}h ago`;
+        if (diffDay === 1) return 'Yesterday';
+        if (diffDay < 7) return `${diffDay}d ago`;
+        if (diffDay < 30) return `${Math.floor(diffDay / 7)}w ago`;
+        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
     }
 
     openTool(tool: Tool) {

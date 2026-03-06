@@ -118,8 +118,8 @@
             <div class="tree-level is-root pt-0" *ngIf="filteredTree">
                 <div class="tree-node-wrapper">
                     <!-- CEO Card -->
-                    <div
-                        class="relative group flex flex-col items-center bg-white dark:bg-[#1a202c] rounded-xl shadow-sm hover:shadow-lg border-t-4 border-primary p-4 w-64 transition-all duration-300 transform hover:-translate-y-1 z-10">
+                    <div (click)="openEmployeeDetails(filteredTree, $event)"
+                        class="relative group flex flex-col items-center bg-white dark:bg-[#1a202c] rounded-xl shadow-sm hover:shadow-lg border-t-4 border-primary p-4 w-64 transition-all duration-300 transform hover:-translate-y-1 z-10 cursor-pointer">
                         <div class="absolute top-3 right-3">
                             <span
                                 class="material-symbols-outlined text-gray-400 hover:text-primary cursor-pointer text-[20px]">more_vert</span>
@@ -156,7 +156,8 @@
                     <div class="tree-node-connector-top"></div>
 
                     <!-- C-Level Card -->
-                    <div class="relative group flex flex-col items-center bg-white dark:bg-[#1a202c] rounded-xl shadow-sm hover:shadow-lg border border-gray-100 dark:border-gray-700 p-4 w-56 transition-all duration-300 transform hover:-translate-y-1 z-10"
+                    <div (click)="openEmployeeDetails(cLevel, $event)"
+                        class="relative group flex flex-col items-center bg-white dark:bg-[#1a202c] rounded-xl shadow-sm hover:shadow-lg border border-gray-100 dark:border-gray-700 p-4 w-56 transition-all duration-300 transform hover:-translate-y-1 z-10 cursor-pointer"
                         [ngClass]="{ 'opacity-70 hover:opacity-100 grayscale hover:grayscale-0': !isExpanded(cLevel.id) && cLevel.children.length > 0 }">
 
                         <!-- Expand/Collapse toggle -->
@@ -190,8 +191,8 @@
                             <div class="tree-node-connector-top"></div>
 
                             <!-- Manager Card (horizontal layout) -->
-                            <div
-                                class="relative group flex flex-col items-start bg-white dark:bg-[#1a202c] rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 p-3 w-48 hover:border-primary/50 transition-colors">
+                            <div (click)="openEmployeeDetails(manager, $event)"
+                                class="relative group flex flex-col items-start bg-white dark:bg-[#1a202c] rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 p-3 w-48 hover:border-primary/50 transition-colors cursor-pointer">
                                 <div class="flex items-center gap-3 mb-2">
                                     <div class="size-10 rounded-full overflow-hidden border border-gray-100">
                                         <img class="w-full h-full object-cover" [src]="manager.avatarUrl"
@@ -265,3 +266,121 @@
     </div>
 
 </ng-container>
+
+<!-- EMPLOYEE DETAILS PANEL -->
+<div *ngIf="selectedEmployee" class="fixed inset-0 z-[60] flex justify-end" (click)="closeEmployeeDetails()">
+    <!-- Backdrop -->
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+    <!-- Panel -->
+    <div class="relative w-full max-w-md bg-white dark:bg-[#1a202c] shadow-2xl overflow-y-auto animate-slide-in-right"
+        (click)="$event.stopPropagation()">
+        <!-- Close Button -->
+        <button (click)="closeEmployeeDetails()"
+            class="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400 transition-colors z-10">
+            <span class="material-symbols-outlined">close</span>
+        </button>
+
+        <!-- Header with gradient bg -->
+        <div
+            class="relative h-32 bg-gradient-to-br from-primary/20 via-blue-100 to-purple-100 dark:from-primary/30 dark:via-blue-900/30 dark:to-purple-900/30">
+        </div>
+
+        <!-- Content -->
+        <div class="px-6 pb-8 -mt-14">
+            <!-- Avatar -->
+            <div
+                class="size-28 rounded-full border-4 border-white dark:border-[#1a202c] overflow-hidden shadow-lg mb-4">
+                <img class="w-full h-full object-cover" [src]="selectedEmployee.avatarUrl"
+                    [alt]="selectedEmployee.fullName" />
+            </div>
+
+            <!-- Name & Title -->
+            <h2 class="text-2xl font-black text-[#111418] dark:text-white leading-tight">{{ selectedEmployee.fullName }}
+            </h2>
+            <p class="text-primary font-semibold text-base mt-1">{{ selectedEmployee.title }}</p>
+
+            <!-- Info Cards -->
+            <div class="mt-6 space-y-4">
+                <!-- Department -->
+                <div class="flex items-center gap-3 p-4 rounded-xl bg-[#f0f2f4] dark:bg-gray-800/50">
+                    <div class="size-10 rounded-full bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-blue-600 dark:text-blue-400">domain</span>
+                    </div>
+                    <div>
+                        <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                            Department</p>
+                        <p class="text-sm font-bold text-[#111418] dark:text-white">{{ selectedEmployee.department }}
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Manager -->
+                <div class="flex items-center gap-3 p-4 rounded-xl bg-[#f0f2f4] dark:bg-gray-800/50">
+                    <div
+                        class="size-10 rounded-full bg-purple-100 dark:bg-purple-900/40 flex items-center justify-center">
+                        <span
+                            class="material-symbols-outlined text-purple-600 dark:text-purple-400">supervisor_account</span>
+                    </div>
+                    <div>
+                        <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Manager
+                        </p>
+                        <button *ngIf="getManagerOf(selectedEmployee) as manager" (click)="navigateToManager(manager)"
+                            class="text-sm font-bold text-primary hover:text-blue-700 hover:underline transition-colors flex items-center gap-1">
+                            {{ manager.fullName }}
+                            <span class="material-symbols-outlined text-[16px]">open_in_new</span>
+                        </button>
+                        <span *ngIf="!getManagerOf(selectedEmployee)"
+                            class="text-sm font-bold text-gray-400 italic">None (Top Level)</span>
+                    </div>
+                </div>
+
+                <!-- Direct Reports -->
+                <div class="flex items-center gap-3 p-4 rounded-xl bg-[#f0f2f4] dark:bg-gray-800/50">
+                    <div
+                        class="size-10 rounded-full bg-green-100 dark:bg-green-900/40 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-green-600 dark:text-green-400">group</span>
+                    </div>
+                    <div>
+                        <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Direct
+                            Reports</p>
+                        <p class="text-sm font-bold text-[#111418] dark:text-white">{{ selectedEmployee.reportsCount }}
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Clients -->
+                <div *ngIf="selectedEmployee.clients && selectedEmployee.clients.length > 0"
+                    class="p-4 rounded-xl bg-[#f0f2f4] dark:bg-gray-800/50">
+                    <div class="flex items-center gap-2 mb-3">
+                        <div
+                            class="size-10 rounded-full bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-amber-600 dark:text-amber-400">business</span>
+                        </div>
+                        <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Clients
+                        </p>
+                    </div>
+                    <div class="flex flex-wrap gap-2 ml-12">
+                        <span *ngFor="let client of selectedEmployee.clients"
+                            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/30 dark:to-orange-900/30 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800/50 shadow-sm">
+                            <span class="material-symbols-outlined text-[14px]">apartment</span>
+                            {{ client }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Status -->
+            <div class="mt-6 flex items-center gap-2">
+                <span class="size-2.5 rounded-full" [ngClass]="{
+                    'bg-green-500': selectedEmployee.statusColor === 'green',
+                    'bg-yellow-500': selectedEmployee.statusColor === 'yellow',
+                    'bg-gray-400': selectedEmployee.statusColor === 'gray'
+                }"></span>
+                <span class="text-sm text-gray-500 dark:text-gray-400 font-medium">
+                    {{ selectedEmployee.statusColor === 'green' ? 'Active' : selectedEmployee.statusColor === 'yellow' ?
+                    'Away' : 'Offline' }}
+                </span>
+            </div>
+        </div>
+    </div>
+</div>

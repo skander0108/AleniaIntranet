@@ -78,26 +78,6 @@ export const routes: Routes = [
                 loadComponent: () => import('./pages/it-support/ticket-detail/ticket-detail.component').then(m => m.TicketDetailComponent)
             },
 
-            // --- Expenses Module ---
-            {
-                path: 'expenses',
-                redirectTo: 'expenses/my',
-                pathMatch: 'full'
-            },
-            {
-                path: 'expenses/my',
-                loadComponent: () => import('./pages/expenses/expenses-dashboard/expenses-dashboard.component').then(m => m.ExpensesDashboardComponent)
-            },
-            {
-                path: 'expenses/approvals',
-                loadComponent: () => import('./pages/expenses/manager-expense-approvals/manager-expense-approvals.component').then(m => m.ManagerExpenseApprovalsComponent),
-                canActivate: [roleGuard],
-                data: { roles: ['MANAGER', 'ADMIN'] }
-            },
-            {
-                path: 'expenses/:id',
-                loadComponent: () => import('./pages/expenses/expense-editor/expense-editor.component').then(m => m.ExpenseEditorComponent)
-            },
             {
                 path: 'admin/it-support',
                 loadComponent: () => import('./pages/it-support/admin/admin-tickets-list/admin-tickets-list.component').then(m => m.AdminTicketsListComponent),
@@ -107,6 +87,13 @@ export const routes: Routes = [
             {
                 path: 'admin/it-support/:id',
                 loadComponent: () => import('./pages/it-support/admin/admin-ticket-detail/admin-ticket-detail.component').then(m => m.AdminTicketDetailComponent),
+                canActivate: [roleGuard],
+                data: { roles: ['ADMIN'] }
+            },
+            // Admin Chat Support
+            {
+                path: 'admin/chat-support',
+                loadComponent: () => import('./pages/admin/admin-chat-dashboard/admin-chat-dashboard.component').then(m => m.AdminChatDashboardComponent),
                 canActivate: [roleGuard],
                 data: { roles: ['ADMIN'] }
             },
@@ -141,12 +128,6 @@ export const routes: Routes = [
                 canActivate: [roleGuard],
                 data: { roles: ['MANAGER', 'ADMIN'] }
             },
-            {
-                path: 'manager/leave',
-                loadComponent: () => import('./pages/manager/manager-leave-dashboard/manager-leave-dashboard.component').then(m => m.ManagerLeaveDashboardComponent),
-                canActivate: [roleGuard],
-                data: { roles: ['MANAGER', 'ADMIN'] }
-            },
             // LMS Tracking Routes
             {
                 path: 'lms/my-progress',
@@ -163,11 +144,6 @@ export const routes: Routes = [
                 loadComponent: () => import('./pages/lms/users-progress/users-progress.component').then(m => m.UsersProgressComponent),
                 canActivate: [roleGuard],
                 data: { roles: ['MANAGER', 'ADMIN'] }
-            },
-            // Leaving Management Routes
-            {
-                path: 'leave',
-                loadComponent: () => import('./pages/leave/leave-dashboard/leave-dashboard.component').then(m => m.LeaveDashboardComponent)
             },
             // Document Management Routes
             {

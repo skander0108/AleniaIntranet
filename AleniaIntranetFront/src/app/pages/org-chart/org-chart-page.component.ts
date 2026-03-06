@@ -27,6 +27,10 @@ export class OrgChartPageComponent implements OnInit {
     isLoading = true;
     expandedNodes = new Set<string>();
 
+    // Employee Details Panel
+    selectedEmployee: OrgNode | null = null;
+    private parentMap = new Map<string, OrgNode>();
+
     // Zoom & Pan
     zoom = 1.0;
     panX = 0;
@@ -38,12 +42,43 @@ export class OrgChartPageComponent implements OnInit {
     ngOnInit(): void {
         setTimeout(() => {
             this.orgTree = ORG_CHART_DATA;
+            this.buildParentMap(this.orgTree, null);
             // By default, expand root and the CTO branch
             this.expandedNodes.add('ceo-1');
             this.expandedNodes.add('cto-1');
             this.applyFilters();
             this.isLoading = false;
         }, 400);
+    }
+
+    // --- Parent Map (for manager lookup) ---
+
+    private buildParentMap(node: OrgNode, parent: OrgNode | null): void {
+        if (parent) {
+            this.parentMap.set(node.id, parent);
+        }
+        for (const child of node.children) {
+            this.buildParentMap(child, node);
+        }
+    }
+
+    // --- Employee Details Panel ---
+
+    openEmployeeDetails(node: OrgNode, event?: MouseEvent): void {
+        if (event) event.stopPropagation();
+        this.selectedEmployee = node;
+    }
+
+    closeEmployeeDetails(): void {
+        this.selectedEmployee = null;
+    }
+
+    getManagerOf(node: OrgNode): OrgNode | null {
+        return this.parentMap.get(node.id) || null;
+    }
+
+    navigateToManager(manager: OrgNode): void {
+        this.selectedEmployee = manager;
     }
 
     // --- Expand/Collapse ---

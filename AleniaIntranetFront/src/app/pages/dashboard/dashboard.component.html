@@ -71,32 +71,60 @@
 
         <!-- Feed Section -->
         <section>
-            <h3 class="text-lg font-bold text-text-main dark:text-white mb-4">Latest Updates</h3>
-            <div class="flex flex-col gap-4">
-                <div *ngFor="let item of filteredFeed()"
-                    class="bg-surface-light dark:bg-surface-dark p-5 rounded-xl border border-gray-100 dark:border-gray-700 hover:border-primary/30 transition-colors flex gap-4">
-                    <div class="shrink-0">
-                        <!-- Image Avatar -->
-                        <div *ngIf="item.image" class="w-16 h-16 rounded-lg bg-cover bg-center shadow-sm"
-                            [style.background-image]="'url(' + item.image + ')'"></div>
-                        <!-- Text/Icon Avatar (Fallback) -->
-                        <div *ngIf="!item.image && item.icon"
-                            class="w-16 h-16 rounded-lg flex items-center justify-center bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">
-                            <span class="material-symbols-outlined text-2xl">{{ item.icon }}</span>
+            <div class="flex items-center justify-between mb-5">
+                <h3 class="text-lg font-bold text-text-main dark:text-white">Latest Updates</h3>
+                <button class="text-primary text-sm font-semibold hover:underline">View All</button>
+            </div>
+
+            <!-- Empty State -->
+            <div *ngIf="filteredFeed().length === 0"
+                class="bg-surface-light dark:bg-surface-dark rounded-2xl border border-dashed border-gray-200 dark:border-gray-700 p-12 flex flex-col items-center justify-center text-center">
+                <span class="material-symbols-outlined text-5xl text-gray-300 dark:text-gray-600 mb-3">feed</span>
+                <h4 class="text-base font-bold text-text-main dark:text-white mb-1">No updates yet</h4>
+                <p class="text-sm text-text-muted dark:text-gray-400">New announcements and updates will appear here.
+                </p>
+            </div>
+
+            <!-- Feed Items -->
+            <div *ngIf="filteredFeed().length > 0" class="flex flex-col gap-4">
+                <div *ngFor="let item of filteredFeed(); let i = index"
+                    class="bg-surface-light dark:bg-surface-dark rounded-xl border border-gray-100 dark:border-gray-700 border-l-[3px] overflow-hidden hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 cursor-pointer group"
+                    [ngClass]="getBorderAccentClass(item.badge)">
+                    <div class="flex gap-4 p-5">
+                        <!-- Avatar / Image -->
+                        <div class="shrink-0">
+                            <!-- Image Thumbnail -->
+                            <div *ngIf="item.image"
+                                class="w-14 h-14 rounded-xl bg-cover bg-center shadow-sm ring-1 ring-gray-100 dark:ring-gray-700 transition-transform duration-300 group-hover:scale-105"
+                                [style.background-image]="'url(' + item.image + ')'"></div>
+                            <!-- Icon Avatar (Fallback) -->
+                            <div *ngIf="!item.image"
+                                class="w-14 h-14 rounded-xl flex items-center justify-center transition-transform duration-300 group-hover:scale-105"
+                                [ngClass]="getCategoryIconBg(item.badge)">
+                                <span class="material-symbols-outlined text-2xl">{{ item.icon }}</span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="flex-1">
-                        <div class="flex items-center justify-between mb-1">
-                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium"
-                                [ngClass]="getBadgeClass(item.type)">
-                                {{ item.badge }}
-                            </span>
-                            <span class="text-xs text-text-muted">{{ item.time }}</span>
+
+                        <!-- Content -->
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center justify-between mb-1.5">
+                                <span
+                                    class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold uppercase tracking-wide"
+                                    [ngClass]="getBadgeClass(item.type)">
+                                    {{ item.badge }}
+                                </span>
+                                <span class="text-xs text-text-muted flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-[14px]">schedule</span>
+                                    {{ item.time }}
+                                </span>
+                            </div>
+                            <h4
+                                class="text-[15px] font-bold text-text-main dark:text-white group-hover:text-primary transition-colors mb-1 truncate">
+                                {{ item.title }}
+                            </h4>
+                            <p class="text-sm text-text-muted dark:text-gray-400 line-clamp-2 leading-relaxed">{{
+                                item.description }}</p>
                         </div>
-                        <h4
-                            class="text-base font-bold text-text-main dark:text-white hover:text-primary cursor-pointer mb-1">
-                            {{ item.title }}</h4>
-                        <p class="text-sm text-text-muted dark:text-gray-400 line-clamp-2">{{ item.description }}</p>
                     </div>
                 </div>
             </div>

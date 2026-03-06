@@ -41,17 +41,6 @@
                 <span class="material-symbols-outlined group-hover:scale-110 transition-transform">calendar_month</span>
                 <span class="text-sm font-medium">Events</span>
             </a>
-            <!-- Leave Management -->
-            <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-muted hover:bg-[#f0f2f4] dark:hover:bg-gray-800 dark:text-gray-400 hover:text-text-main dark:hover:text-white transition-colors group"
-                routerLink="/leave">
-                <span class="material-symbols-outlined group-hover:scale-110 transition-transform">flight_takeoff</span>
-                <span class="text-sm font-medium">My Leaves</span>
-            </a>
-            <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-muted hover:bg-[#f0f2f4] dark:hover:bg-gray-800 dark:text-gray-400 hover:text-text-main dark:hover:text-white transition-colors group"
-                routerLink="/expenses/my">
-                <span class="material-symbols-outlined group-hover:scale-110 transition-transform">payments</span>
-                <span class="text-sm font-medium">My Expenses</span>
-            </a>
 
             <!-- LMS TRACKING -->
             <div class="pt-4 pb-2">
@@ -62,7 +51,7 @@
             <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-muted hover:bg-[#f0f2f4] dark:hover:bg-gray-800 dark:text-gray-400 hover:text-text-main dark:hover:text-white transition-colors group"
                 routerLink="/lms/my-progress">
                 <span class="material-symbols-outlined group-hover:scale-110 transition-transform">school</span>
-                <span class="text-sm font-medium">My Progress</span>
+                <span class="text-sm font-medium">My Learning</span>
             </a>
 
             <!-- Global Tracking (Admin/Manager) -->
@@ -89,12 +78,6 @@
                     class="material-symbols-outlined group-hover:scale-110 transition-transform">space_dashboard</span>
                 <span class="text-sm font-medium">Manager Dashboard</span>
             </a>
-            <a *ngIf="isManagerOrAdmin()"
-                class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-muted hover:bg-[#f0f2f4] dark:hover:bg-gray-800 dark:text-gray-400 hover:text-text-main dark:hover:text-white transition-colors group"
-                routerLink="/expenses/approvals">
-                <span class="material-symbols-outlined group-hover:scale-110 transition-transform">receipt_long</span>
-                <span class="text-sm font-medium">Expense Approvals</span>
-            </a>
             <!-- Admin Panel (ADMIN only) -->
             <a *ngIf="isAdmin()"
                 class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-muted hover:bg-[#f0f2f4] dark:hover:bg-gray-800 dark:text-gray-400 hover:text-text-main dark:hover:text-white transition-colors group"
@@ -102,6 +85,12 @@
                 <span
                     class="material-symbols-outlined group-hover:scale-110 transition-transform">admin_panel_settings</span>
                 <span class="text-sm font-medium">Admin Panel</span>
+            </a>
+            <a *ngIf="isAdmin()"
+                class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-muted hover:bg-[#f0f2f4] dark:hover:bg-gray-800 dark:text-gray-400 hover:text-text-main dark:hover:text-white transition-colors group"
+                routerLink="/admin/chat-support">
+                <span class="material-symbols-outlined group-hover:scale-110 transition-transform">support_agent</span>
+                <span class="text-sm font-medium">IT Chat Support</span>
             </a>
         </nav>
         <div class="mt-auto">

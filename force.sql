@@ -1,0 +1,1 @@
+UPDATE users SET password = '\/hGVDQ8B5MsY2m9S0d9N2r9P0d9Mx.JxjJ/gq5XkI6K6L1X/7w5W';

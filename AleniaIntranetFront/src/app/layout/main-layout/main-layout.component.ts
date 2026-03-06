@@ -3,6 +3,8 @@ import { RouterOutlet } from '@angular/router';
 import { SidebarComponent } from '../sidebar/sidebar';
 import { HeaderComponent } from '../header/header';
 import { ToastNotificationsComponent } from '../../shared/components/toast-notifications/toast-notifications.component';
+import { ToastComponent } from '../../shared/toast/toast.component';
+import { ChatWidgetComponent } from '../../shared/chat-widget/chat-widget.component';
 
 @Component({
   selector: 'app-main-layout',
@@ -11,7 +13,9 @@ import { ToastNotificationsComponent } from '../../shared/components/toast-notif
     RouterOutlet,
     SidebarComponent,
     HeaderComponent,
-    ToastNotificationsComponent
+    ToastNotificationsComponent,
+    ToastComponent,
+    ChatWidgetComponent
   ],
   template: `
     <div class="flex h-screen overflow-hidden bg-background-light dark:bg-background-dark text-text-main dark:text-white transition-colors duration-200">
@@ -29,8 +33,9 @@ import { ToastNotificationsComponent } from '../../shared/components/toast-notif
         </div>
       </main>
 
-      <!-- Toast Notifications - Global -->
       <app-toast-notifications></app-toast-notifications>
+      <app-toast></app-toast>
+      <app-chat-widget></app-chat-widget>
     </div>
   `
 })

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
     selector: 'app-login',
@@ -21,7 +22,8 @@ export class LoginComponent {
         private fb: FormBuilder,
         private authService: AuthService,
         private router: Router,
-        private route: ActivatedRoute
+        private route: ActivatedRoute,
+        private toastService: ToastService
     ) {
         this.loginForm = this.fb.group({
             email: ['', [Validators.required, Validators.email]],
@@ -63,6 +65,10 @@ export class LoginComponent {
                     fullName: response.fullName,
                     roles: response.roles
                 };
+
+                // Show welcome toast
+                const firstName = response.fullName?.split(' ')[0] || 'User';
+                this.toastService.show(`Welcome, ${firstName}! 👋`, 'success', 3000);
 
                 // Get return URL or use role-based redirect
                 const returnUrl = this.route.snapshot.queryParams['returnUrl'] || this.authService.getRedirectUrl(user);
