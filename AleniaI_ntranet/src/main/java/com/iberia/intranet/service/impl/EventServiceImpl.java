@@ -66,7 +66,7 @@ public class EventServiceImpl implements EventService {
             throw new org.springframework.security.access.AccessDeniedException("User not authenticated");
         }
 
-        boolean isAdmin = false;
+        boolean isHR = false;
         try {
             // Re-fetch user to ensuring we have an active session for lazy loading roles
             User managedUser = userRepository.findById(currentUser.getId()).orElse(currentUser);
@@ -74,15 +74,15 @@ public class EventServiceImpl implements EventService {
                 // Initialize roles if needed (accessing size triggers initialization if
                 // attached)
                 managedUser.getRoles().isEmpty();
-                isAdmin = managedUser.getRoles().stream()
-                        .anyMatch(role -> "ADMIN".equals(role.getRole().name()));
+                isHR = managedUser.getRoles().stream()
+                        .anyMatch(role -> "HR".equals(role.getRole().name()));
             }
         } catch (Exception e) {
-            // If fetching/checking fails, assume not admin.
-            isAdmin = false;
+            // If fetching/checking fails, assume not HR.
+            isHR = false;
         }
 
-        if (!isAdmin && (event.getUser() == null || !event.getUser().getId().equals(currentUser.getId()))) {
+        if (!isHR && (event.getUser() == null || !event.getUser().getId().equals(currentUser.getId()))) {
             throw new org.springframework.security.access.AccessDeniedException(
                     "You are not authorized to delete this event");
         }

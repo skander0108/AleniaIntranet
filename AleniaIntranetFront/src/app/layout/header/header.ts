@@ -14,7 +14,27 @@ import { SearchService } from '../../core/services/search';
   styleUrl: './header.css'
 })
 export class HeaderComponent {
-  constructor(public authService: AuthService, public searchService: SearchService, private router: Router) { }
+  isDarkMode = false;
+
+  constructor(public authService: AuthService, public searchService: SearchService, private router: Router) {
+    this.isDarkMode = localStorage.getItem('darkMode') === 'true' ||
+      (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    this.applyDarkMode();
+  }
+
+  toggleDarkMode() {
+    this.isDarkMode = !this.isDarkMode;
+    localStorage.setItem('darkMode', this.isDarkMode.toString());
+    this.applyDarkMode();
+  }
+
+  private applyDarkMode() {
+    if (this.isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }
 
   onSearchChange(event: Event) {
     const input = event.target as HTMLInputElement;

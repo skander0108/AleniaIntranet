@@ -36,29 +36,29 @@ public class LmsController {
     }
 
     @GetMapping("/global-progress")
-    @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
-    @Operation(summary = "Get global progress (Manager & Admin)")
+    @PreAuthorize("hasAnyRole('HR')")
+    @Operation(summary = "Get global progress (Manager & HR)")
     public ResponseEntity<List<LmsProgressDto>> getGlobalProgress() {
         return ResponseEntity.ok(lmsService.getGlobalProgress());
     }
 
     @PostMapping("/sync")
-    @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Trigger LMS sync from iSpring (Admin only)")
+    @PreAuthorize("hasRole('HR')")
+    @Operation(summary = "Trigger LMS sync from iSpring (HR only)")
     public ResponseEntity<LmsSyncLogDto> triggerSync() {
         return ResponseEntity.ok(lmsService.triggerSync());
     }
 
     @GetMapping("/sync/logs")
-    @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Get sync logs (Admin only)")
+    @PreAuthorize("hasRole('HR')")
+    @Operation(summary = "Get sync logs (HR only)")
     public ResponseEntity<List<LmsSyncLogDto>> getSyncLogs() {
         return ResponseEntity.ok(lmsService.getSyncLogs());
     }
 
     @GetMapping("/users-progress")
-    @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
-    @Operation(summary = "Get paginated users progress with fast cache (Manager & Admin)")
+    @PreAuthorize("hasAnyRole('HR')")
+    @Operation(summary = "Get paginated users progress with fast cache (Manager & HR)")
     public ResponseEntity<Page<LmsUserCourseProgressDto>> getPaginatedUsersProgress(
             Pageable pageable,
             @RequestParam(required = false) String search) {

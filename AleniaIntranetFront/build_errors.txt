@@ -1,0 +1,258 @@
+﻿[33mÔØ»[39m Building...
+[32mÔ£ö[39m Building...
+Application bundle generation failed. [5.933 seconds] - 2026-03-13T02:22:12.128Z
+
+node.exe : 
+[1m[31m[31mX [41;31
+m[[41;97mERROR[41;31m
+][0m [1mTS2339: 
+Property 'isAdmin' 
+does not exist on type 
+'AdminDocumentsComponen
+t'.[0m 
+[1m[35m[plugin 
+angular-compiler][0m
+Au caractère C:\Users\S
+kan1\AppData\Roaming\np
+m\ng.ps1:24 : 5
++     & "node$exe"  "$b
+asedir/node_modules/@an
+gular/cli/bin/ng.js" 
+$arg ...
++     ~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+~~
+    + CategoryInfo     
+         : NotSpecifi  
+  ed: ([1m[31m[31   
+ mX...r-compiler][    
+0m:String) [], Rem    
+oteException
+    + FullyQualifiedEr 
+   rorId : NativeComm  
+  andError
+ 
+
+    src/app/pages/admin
+/admin-documents/admin-
+documents.component.htm
+l:114:43:
+[37m      114 Ôöé ... 
+            <option *ng
+If="[32misAdmin[37m" 
+value="ADMIN_ONLY">Admi
+ns...
+          ÔòÁ          
+                      
+[32m~~~~~~~[0m
+
+  Error occurs in the 
+template of component A
+dminDocumentsComponent.
+
+    src/app/pages/admin
+/admin-documents/admin-
+documents.component.ts:
+12:17:
+[37m      12 Ôöé     
+templateUrl: [32m'./ad
+min-documents.component
+.html'[37m,
+         ÔòÁ           
+       [32m~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+[0m
+
+
+[31mX [41;31m[[41;97
+mERROR[41;31m][0m 
+[1mTS2339: Property 
+'isAdmin' does not 
+exist on type 'Document
+sListComponent'.[0m 
+[1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/pages/docum
+ents/documents-list/doc
+uments-list.component.h
+tml:11:27:
+[37m      11 Ôöé      
+       <button *ngIf="
+[32misAdmin[37m || 
+isManager" 
+routerLink="/admi...
+         ÔòÁ           
+                 
+[32m~~~~~~~[0m
+
+  Error occurs in the 
+template of component 
+DocumentsListComponent.
+
+    src/app/pages/docum
+ents/documents-list/doc
+uments-list.component.t
+s:15:17:
+[37m      15 Ôöé     
+templateUrl: [32m'./do
+cuments-list.component.
+html'[37m,
+         ÔòÁ           
+       [32m~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
+[0m
+
+
+[31mX [41;31m[[41;97
+mERROR[41;31m][0m 
+[1mTS2339: Property 
+'isManager' does not 
+exist on type 'EventsPa
+geComponent'.[0m 
+[1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/pages/event
+s/events-page.component
+.html:23:27:
+[37m      23 Ôöé      
+       <button *ngIf="
+[32misManager[37m" rou
+terLink="/manager/event
+s/...
+         ÔòÁ           
+                 
+[32m~~~~~~~~~[0m
+
+  Error occurs in the 
+template of component 
+EventsPageComponent.
+
+    src/app/pages/event
+s/events-page.component
+.ts:19:15:
+[37m      19 Ôöé   
+templateUrl: [32m'./ev
+ents-page.component.htm
+l'[37m,
+         ÔòÁ           
+     [32m~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97
+mERROR[41;31m][0m 
+[1mTS2339: Property 
+'isManager' does not 
+exist on type 'EventsPa
+geComponent'.[0m 
+[1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/pages/event
+s/events-page.component
+.html:232:28:
+[37m      232 Ôöé     
+            <div *ngIf=
+"[32misManager[37m"
+          ÔòÁ          
+                   
+[32m~~~~~~~~~[0m
+
+  Error occurs in the 
+template of component 
+EventsPageComponent.
+
+    src/app/pages/event
+s/events-page.component
+.ts:19:15:
+[37m      19 Ôöé   
+templateUrl: [32m'./ev
+ents-page.component.htm
+l'[37m,
+         ÔòÁ           
+     [32m~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97
+mERROR[41;31m][0m 
+[1mTS2339: Property 
+'isManager' does not 
+exist on type 'JoinersP
+ageComponent'.[0m 
+[1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/pages/joine
+rs/joiners-page/joiners
+-page.component.html:23
+:27:
+[37m      23 Ôöé      
+       <button *ngIf="
+[32misManager[37m" (cl
+ick)="openFormModal()"
+         ÔòÁ           
+                 
+[32m~~~~~~~~~[0m
+
+  Error occurs in the 
+template of component 
+JoinersPageComponent.
+
+    src/app/pages/joine
+rs/joiners-page/joiners
+-page.component.ts:16:1
+7:
+[37m      16 Ôöé     
+templateUrl: [32m'./jo
+iners-page.component.ht
+ml'[37m
+         ÔòÁ           
+       [32m~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~[0
+m
+
+
+[31mX [41;31m[[41;97
+mERROR[41;31m][0m 
+[1mTS2339: Property 
+'isManager' does not 
+exist on type 'JoinersP
+ageComponent'.[0m 
+[1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/pages/joine
+rs/joiners-page/joiners
+-page.component.html:16
+7:31:
+[37m      167 Ôöé ... 
+           <button *ngI
+f="[32misManager[37m"
+ (click)="$event.stopPr
+op...
+          ÔòÁ          
+                     
+[32m~~~~~~~~~[0m
+
+  Error occurs in the 
+template of component 
+JoinersPageComponent.
+
+    src/app/pages/joine
+rs/joiners-page/joiners
+-page.component.ts:16:1
+7:
+[37m      16 Ôöé     
+templateUrl: [32m'./jo
+iners-page.component.ht
+ml'[37m
+         ÔòÁ           
+       [32m~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~[0
+m
+
+[39m[22m

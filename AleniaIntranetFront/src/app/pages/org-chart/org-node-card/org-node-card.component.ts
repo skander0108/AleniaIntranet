@@ -10,10 +10,7 @@ import { DEPARTMENT_BADGE } from '../org-chart-data';
   template: `
     <div class="bg-white dark:bg-[#1a202c] rounded-xl shadow p-4 w-52 text-center
                 hover:shadow-lg transition-shadow duration-200 cursor-pointer relative">
-      <img [src]="node.avatarUrl"
-           [alt]="node.fullName"
-           class="w-11 h-11 rounded-full mx-auto mb-2 border border-gray-200 dark:border-gray-600 object-cover"
-           loading="lazy" />
+
       <h4 class="font-semibold text-sm text-[#111418] dark:text-white">{{ node.fullName }}</h4>
       <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{{ node.title }}</p>
       <span *ngIf="badgeClasses"

@@ -128,19 +128,13 @@ public class DocumentServiceImpl implements DocumentService {
         User user = userRepository.findWithRolesByEmail(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        boolean isAdmin = user.getRoles().stream()
+        boolean isHR = user.getRoles().stream()
                 .map(r -> r.getRole().name())
-                .anyMatch(role -> role.equals("ROLE_ADMIN"));
-
-        boolean isManager = user.getRoles().stream()
-                .map(r -> r.getRole().name())
-                .anyMatch(role -> role.equals("ROLE_MANAGER"));
+                .anyMatch(role -> role.equals("ROLE_HR"));
 
         List<String> allowedLevels;
-        if (isAdmin) {
-            allowedLevels = Arrays.asList("ALL", "MANAGER_ONLY", "ADMIN_ONLY");
-        } else if (isManager) {
-            allowedLevels = Arrays.asList("ALL", "MANAGER_ONLY");
+        if (isHR) {
+            allowedLevels = Arrays.asList("ALL", "HR_ONLY");
         } else {
             allowedLevels = Arrays.asList("ALL");
         }
@@ -202,15 +196,11 @@ public class DocumentServiceImpl implements DocumentService {
         User user = userRepository.findWithRolesByEmail(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        boolean isAdmin = user.getRoles().stream().anyMatch(r -> r.getRole().name().equals("ROLE_ADMIN"));
-        boolean isManager = user.getRoles().stream().anyMatch(r -> r.getRole().name().equals("ROLE_MANAGER"));
-
-        if (isAdmin)
+        boolean isHR = user.getRoles().stream().anyMatch(r -> r.getRole().name().equals("ROLE_HR"));
+        if (isHR)
             return true;
-        if ("ADMIN_ONLY".equals(doc.getAccessLevel()))
+        if ("HR_ONLY".equals(doc.getAccessLevel()))
             return false;
-        if ("MANAGER_ONLY".equals(doc.getAccessLevel()))
-            return isManager;
         return true;
     }
 }

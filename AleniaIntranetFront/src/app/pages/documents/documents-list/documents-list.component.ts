@@ -6,6 +6,7 @@ import { Subject } from 'rxjs';
 import { debounceTime, takeUntil, distinctUntilChanged } from 'rxjs/operators';
 import { DocumentService } from '../../../core/services/document.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { ToastService } from '../../../core/services/toast.service';
 import { Document } from '../../../core/models/document.model';
 
 @Component({
@@ -20,8 +21,8 @@ export class DocumentsListComponent implements OnInit, OnDestroy {
     isLoading = true;
     searchControl = new FormControl('');
 
-    isAdmin = false;
-    isManager = false;
+    isHR = false;
+
 
     private destroy$ = new Subject<void>();
 
@@ -32,7 +33,8 @@ export class DocumentsListComponent implements OnInit, OnDestroy {
     constructor(
         private documentService: DocumentService,
         private authService: AuthService,
-        private cdr: ChangeDetectorRef
+        private cdr: ChangeDetectorRef,
+        private toastService: ToastService
     ) { }
 
     ngOnInit(): void {
@@ -48,8 +50,8 @@ export class DocumentsListComponent implements OnInit, OnDestroy {
 
     private checkUserRoles(): void {
         const roles = this.authService.getUserRoles();
-        this.isAdmin = roles.includes('ROLE_ADMIN');
-        this.isManager = roles.includes('ROLE_MANAGER');
+        this.isHR = roles.includes('ROLE_HR');
+
     }
 
     private setupSearch(): void {
@@ -93,6 +95,23 @@ export class DocumentsListComponent implements OnInit, OnDestroy {
             },
             error: (error) => {
                 console.error('Error downloading document:', error);
+            }
+        });
+    }
+
+    deleteDocument(doc: Document): void {
+        if (!confirm(`Are you sure you want to delete "${doc.title}"?`)) {
+            return;
+        }
+        this.documentService.deleteDocument(doc.id).subscribe({
+            next: () => {
+                this.documents = this.documents.filter(d => d.id !== doc.id);
+                this.toastService.show('Document deleted successfully', 'success');
+                this.cdr.detectChanges();
+            },
+            error: (error) => {
+                console.error('Error deleting document:', error);
+                this.toastService.show('Failed to delete document. Please try again.', 'error');
             }
         });
     }

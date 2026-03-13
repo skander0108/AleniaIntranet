@@ -1,0 +1,377 @@
+{
+    "country": "Portugal",
+    "flag": "🇵🇹",
+    "title": "All Things HR Portugal",
+    "sections": [
+        {
+            "id": "health-insurance",
+            "title": "Health Insurance – MGEN Coverage",
+            "icon": "health_and_safety",
+            "content": {
+                "intro": "Employees based in Portugal are enrolled in a health insurance plan provided by MGEN, offering access to a broad network of healthcare professionals and services.",
+                "subsections": [
+                    {
+                        "title": "👥 Who is eligible?",
+                        "bullets": [
+                            "All employees under a permanent contract in Portugal",
+                            "Coverage begins from your first day at Alenia.",
+                            "Login details and digital access to your insurance card will be provided shortly after onboarding"
+                        ]
+                    },
+                    {
+                        "title": "🧾 How to use your insurance?",
+                        "bullets": [
+                            "Claims and reimbursements can be managed via the MGEN online portal",
+                            "You can consult your coverage details, track expenses, and download supporting documents"
+                        ]
+                    },
+                    {
+                        "title": "📚 MGEN User Guides – myAdvancecare Portal",
+                        "text": "To help you easily manage your MGEN health insurance through the myAdvancecare portal, we provide two official guides in Portuguese:",
+                        "guides": [
+                            {
+                                "name": "Manual de Registo na Área Reservada My ADV",
+                                "description": "This guide walks you through registering and activating your account on the secure myAdvancecare portal."
+                            },
+                            {
+                                "name": "Manual de Submissão de Despesas para Reembolso – Portal myAdvancecare",
+                                "description": "This manual explains how to submit your healthcare expenses for reimbursement via the portal."
+                            }
+                        ]
+                    },
+                    {
+                        "title": "☎️ Useful Contacts – MGEN & AdvanceCare",
+                        "text": "For any questions related to your health insurance, reimbursements, or the myAdvancecare portal, you can contact:",
+                        "contacts": [
+                            {
+                                "name": "MGEN",
+                                "phone": "+351 211 155 860",
+                                "email": "gestao@mgen.pt"
+                            },
+                            {
+                                "name": "AdvanceCare (Portal Support)",
+                                "phone": "+351 213 228 000",
+                                "email": "info@advancecare.com"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "id": "duodecimos",
+            "title": "Duodécimos (Payment in 12 or 14 Months)",
+            "icon": "payments",
+            "content": {
+                "intro": "In Portugal, employees can choose how they wish to receive their annual salary, either in 12 or 14 installments, a system known as duodécimos.",
+                "subsections": [
+                    {
+                        "title": "🔹 12 installments",
+                        "text": "Your total annual salary (including the legal bonuses) is evenly distributed over the 12 months of the year.",
+                        "note": "👉 No additional payments are required in the summer or at year-end; everything is included in your monthly salary."
+                    },
+                    {
+                        "title": "🔹 14 installments",
+                        "text": "Your base salary is paid monthly, and you receive two extra payments in June and December, which correspond to the holiday bonus and Christmas bonus.",
+                        "bullets": [
+                            "The holiday bonus must be paid by June 15 at the latest, and the Christmas bonus by December 15 at the latest."
+                        ],
+                        "note": "👉 This is the most traditional system in Portugal."
+                    },
+                    {
+                        "title": "📌 Important",
+                        "text": "Your choice between 12 or 14 installments impacts how your salary is processed, including payroll calculations and social security contributions. If you want to update your preference or have questions, feel free to contact admin-portugal@alenia.io",
+                        "contact": {
+                            "email": "admin-portugal@alenia.io"
+                        }
+                    },
+                    {
+                        "title": "❓ FAQ – 14-installment salary system",
+                        "faq": [
+                            {
+                                "question": "Why are the June and December payments not the same amount?",
+                                "answer": "The net amounts may differ due to tax withholding, social security contributions, and payroll adjustments, especially at year-end. This is normal under the 14-installment system."
+                            },
+                            {
+                                "question": "Am I losing part of my salary if one payment is lower?",
+                                "answer": "No. The total annual gross salary remains exactly the same. The difference only relates to how the salary is processed and paid."
+                            },
+                            {
+                                "question": "Are the June and December payments additional bonuses?",
+                                "answer": "No. They are mandatory legal payments and are already included in your annual salary."
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "id": "irs-jovem",
+            "title": "IRS Jovem (Young Worker Tax Benefit)",
+            "icon": "school",
+            "content": {
+                "intro": "IRS Jovem is a tax benefit designed to support young taxpayers in Portugal.",
+                "subsections": [
+                    {
+                        "title": "Here's what you need to know:",
+                        "bullets": [
+                            "This benefit is managed through your personal tax declaration.",
+                            "It is not handled by the employer.",
+                            "Each employee must declare it themselves when filing their annual tax return."
+                        ]
+                    },
+                    {
+                        "title": "✅ How to apply for IRS Jovem:",
+                        "bullets": [
+                            "In your tax return, go to the income section and select the option related to IRS Jovem.",
+                            "In the \"Income Code\" field, enter code 417."
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "id": "bonus-policy",
+            "title": "Bonus Policy – Alenia Consulting",
+            "icon": "emoji_events",
+            "content": {
+                "intro": "At Alenia Consulting, we believe in recognizing and rewarding the efforts of our consultants.",
+                "subsections": [
+                    {
+                        "title": "🔔 When is the bonus paid?",
+                        "bullets": [
+                            "Once a year, between March and April",
+                            "Based on your work during the previous calendar year"
+                        ]
+                    },
+                    {
+                        "title": "👥 Who is eligible?",
+                        "bullets": [
+                            "All consultants with a valid contract during the year",
+                            "Bonus is based on performance, engagement, and client feedback"
+                        ],
+                        "note": "➡️ Important: The bonus is only applicable if your trial period is successfully completed."
+                    },
+                    {
+                        "title": "🔢 How is it calculated?",
+                        "text": "The bonus is divided into two equal parts:",
+                        "details": [
+                            {
+                                "label": "50% – Your mission at the client:",
+                                "items": [
+                                    "Quality of deliverables",
+                                    "Client feedback",
+                                    "Professional behavior and communication"
+                                ]
+                            },
+                            {
+                                "label": "50% – Your involvement with Alenia:",
+                                "items": [
+                                    "Participation in internal activities and events (fortnightly, Slack, meetups…)",
+                                    "Support to your colleagues and team spirit",
+                                    "And especially: your contributions to building and improving Alenia's internal structure, through involvement in domains like:",
+                                    "Events (organising team activities, celebrations)",
+                                    "Communication (content creation, visibility)",
+                                    "Hiring (participation in interviews, referrals)",
+                                    "Journey (onboarding, support to newcomers, knowledge sharing)"
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "title": "✉️ How will you be informed?",
+                        "text": "Bonus details are shared during your annual review or 1:1 meeting."
+                    }
+                ]
+            }
+        },
+        {
+            "id": "salary-review",
+            "title": "Salary Review Process",
+            "icon": "trending_up",
+            "content": {
+                "intro": "At Alenia Consulting, we believe in transparency and fair recognition of our consultants' contributions.",
+                "subsections": [
+                    {
+                        "title": "🔔 When does the salary review happen?",
+                        "bullets": [
+                            "On your contract anniversary date each year",
+                            "Based on your performance and contribution during the previous 12 months"
+                        ]
+                    },
+                    {
+                        "title": "👥 Who is eligible?",
+                        "bullets": [
+                            "All consultants with at least 1 year of service at Alenia Consulting",
+                            "Salary adjustments are based on performance, engagement, and overall contribution to Alenia and our clients"
+                        ]
+                    },
+                    {
+                        "title": "🔄 Main steps of the process",
+                        "steps": [
+                            {
+                                "step": "1 – Preparation",
+                                "description": "Managers and consultants reflect on the past year, collect feedback, and prepare for the annual meeting."
+                            },
+                            {
+                                "step": "2 – Annual Meeting",
+                                "description": "Consultants and managers meet to discuss: Achievements and challenges, Workload and skills to develop, Expectations for the future."
+                            },
+                            {
+                                "step": "3 – Validation",
+                                "description": "Our management team reviews all proposals to ensure fairness, consistency, and alignment with the company's budget."
+                            },
+                            {
+                                "step": "4 – Communication",
+                                "description": "Once the process is complete, each consultant receives personal feedback and the final decision."
+                            }
+                        ]
+                    },
+                    {
+                        "title": "🎯 Why do we do it?",
+                        "bullets": [
+                            "✅ Recognize your professional growth",
+                            "✅ Value the increase in your responsibilities",
+                            "✅ Acknowledge the development of your skills"
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "id": "overtime-oncall",
+            "title": "Compensation – Overtime & On-call Duties",
+            "icon": "schedule",
+            "content": {
+                "intro": "To ensure clear and transparent communication, please find below the details of the compensation applicable to overtime hours and on-call duties.",
+                "subsections": [
+                    {
+                        "title": "⏱️ Overtime",
+                        "text": "Overtime hours are compensated based on the day on which they are worked:",
+                        "rates": [
+                            {
+                                "day": "Weekdays (Monday to Friday) and Saturday",
+                                "rate": "€26 gross / hour"
+                            },
+                            {
+                                "day": "Sunday and public holidays",
+                                "rate": "€35 gross / hour"
+                            }
+                        ],
+                        "note": "🔹 In summary: overtime rates depend on the day worked, with a higher rate applied on Sundays and public holidays."
+                    },
+                    {
+                        "title": "📞 On-call Duties",
+                        "text": "On-call periods are compensated with a fixed amount, regardless of the number of interventions (excluding hours actually worked):",
+                        "oncallRates": [
+                            {
+                                "period": "Full week (Mon–Fri, excl. public holidays)",
+                                "rate": "€35 gross"
+                            },
+                            {
+                                "period": "Saturday",
+                                "rate": "€28 gross"
+                            },
+                            {
+                                "period": "Sunday",
+                                "rate": "€28 gross"
+                            },
+                            {
+                                "period": "Public holiday",
+                                "rate": "€28 gross"
+                            }
+                        ],
+                        "note": "ℹ️ If an intervention occurs during an on-call period, the hours actually worked are compensated in addition, according to the applicable rules (overtime, Sunday or public holiday work)."
+                    },
+                    {
+                        "title": "🛌 Compensatory day",
+                        "text": "At Alenia Consulting we value the dedication of our employees and want to ensure that working on Sundays is fairly recognized. Employees are entitled to one full compensatory day off, to be taken within three working days following the Sunday worked.",
+                        "warning": "⚠️ Please note: This arrangement goes beyond the minimum requirements established by Portuguese labor law, which mandates a lower rate of compensation for Sunday work. Our company provides this higher benefit as an additional advantage for our employees."
+                    }
+                ]
+            }
+        },
+        {
+            "id": "paid-holidays",
+            "title": "Paid Holidays",
+            "icon": "beach_access",
+            "content": {
+                "intro": "",
+                "subsections": [
+                    {
+                        "title": "📜 Legal Framework (Portugal)",
+                        "bullets": [
+                            "By law, full-time employees are entitled to 22 working days of paid leave per year (Article 238 of the Código do Trabalho).",
+                            "During the first year of employment, leave is accrued at 2 days per month worked, up to a maximum of 20 days, which can only be taken after 6 months of service."
+                        ]
+                    },
+                    {
+                        "title": "🌿 Alenia Policy",
+                        "bullets": [
+                            "Alenia provides 25 days of paid leave per year from the first year of employment.",
+                            "For employees joining mid-year, leave is calculated on a pro-rata basis."
+                        ]
+                    },
+                    {
+                        "title": "📅 Submitting a Request in Boond",
+                        "steps": [
+                            {
+                                "step": "1",
+                                "description": "Click on \"Absences\" 📅 from your dashboard."
+                            },
+                            {
+                                "step": "2",
+                                "description": "Click on the ➕ next to \"Absences Request\" ✏️"
+                            },
+                            {
+                                "step": "3",
+                                "description": "Enter the duration of your absence (0.5 or 1 day) ⏱️"
+                            },
+                            {
+                                "step": "4",
+                                "description": "Click \"Create\" ✅ to submit your request."
+                            }
+                        ]
+                    },
+                    {
+                        "title": "📊 Checking Your Leave Balance in Boond",
+                        "bullets": [
+                            "Go to \"Absences\" → \"Absence Balances\" 📅",
+                            "View your remaining annual leave entitlement, which will be displayed on the screen ✅"
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "id": "sick-leave",
+            "title": "Sick Leave",
+            "icon": "sick",
+            "content": {
+                "intro": "",
+                "subsections": [
+                    {
+                        "title": "General Rules",
+                        "bullets": [
+                            "Sick leave corresponds to a temporary suspension of your employment contract due to illness or a non-work-related accident.",
+                            "Segurança Social provides sick pay starting from the 4th day of absence.",
+                            "The first 3 days are unpaid."
+                        ]
+                    },
+                    {
+                        "title": "📄 Required Documentation",
+                        "text": "A medical certificate issued by a doctor must be sent to HR by email."
+                    },
+                    {
+                        "title": "📝 How to Record Sick Leave",
+                        "text": "Submit an absence request in Boond by selecting Sick Leave and specifying the affected days."
+                    },
+                    {
+                        "title": "⚠️ Important Note",
+                        "text": "Without a medical certificate, the absence must be recorded as paid leave."
+                    }
+                ]
+            }
+        }
+    ]
+}

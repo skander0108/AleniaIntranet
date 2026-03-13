@@ -43,9 +43,9 @@ export class OrgChartPageComponent implements OnInit {
         setTimeout(() => {
             this.orgTree = ORG_CHART_DATA;
             this.buildParentMap(this.orgTree, null);
-            // By default, expand root and the CTO branch
-            this.expandedNodes.add('ceo-1');
-            this.expandedNodes.add('cto-1');
+            // By default, expand root and first talent manager branch
+            this.expandedNodes.add('cd-1');
+            this.expandedNodes.add('tm-michel');
             this.applyFilters();
             this.isLoading = false;
         }, 400);

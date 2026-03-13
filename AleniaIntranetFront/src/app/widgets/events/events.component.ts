@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DashboardService } from '../../core/services/dashboard.service';
+import { RouterModule } from '@angular/router';
 
 interface UiEvent {
     month: string;
@@ -9,9 +10,9 @@ interface UiEvent {
     time: string;
     location: string;
     type: string;
+    daysUntil: string;
+    eventDate: string;
 }
-
-import { RouterModule } from '@angular/router';
 
 @Component({
     selector: 'app-events',
@@ -23,25 +24,47 @@ import { RouterModule } from '@angular/router';
 export class EventsComponent {
     private dashboardService = inject(DashboardService);
     events = signal<UiEvent[]>([]);
+    nextEvent = signal<{ title: string; daysUntil: number; eventDate: string } | null>(null);
 
     constructor() {
         this.dashboardService.getUpcomingEvents().subscribe(data => {
-            // Map backend data to UI format if needed, or use as is if compatible
-            // backend Event has: id, title, eventDate, eventTime, location
-            // UI expects: month, day, title, time, location, type
-            this.events.set(data.map(e => {
+            const now = new Date();
+            now.setHours(0, 0, 0, 0);
+
+            const mapped = data.map(e => {
                 const date = new Date(e.eventDate);
                 const month = date.toLocaleString('default', { month: 'short' });
                 const day = date.getDate().toString();
+                const diffDays = Math.ceil((date.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+                let daysUntil = '';
+                if (diffDays <= 0) daysUntil = 'Today';
+                else if (diffDays === 1) daysUntil = 'Tomorrow';
+                else daysUntil = `In ${diffDays} days`;
+
                 return {
                     month,
                     day,
                     title: e.title,
-                    time: e.eventTime.substring(0, 5), // 'HH:mm'
+                    time: e.eventTime.substring(0, 5),
                     location: e.location,
-                    type: this.getRandomType() // Backend doesn't store color type yet
+                    type: this.getRandomType(),
+                    daysUntil,
+                    eventDate: e.eventDate
                 };
-            }));
+            });
+            this.events.set(mapped);
+
+            // Set next event countdown
+            if (data.length > 0) {
+                const first = data[0];
+                const firstDate = new Date(first.eventDate);
+                const diffDays = Math.ceil((firstDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+                this.nextEvent.set({
+                    title: first.title,
+                    daysUntil: Math.max(0, diffDays),
+                    eventDate: first.eventDate
+                });
+            }
         });
     }
 
@@ -80,3 +103,4 @@ export class EventsComponent {
         return map[event.type] || 'text-gray-800';
     }
 }
+

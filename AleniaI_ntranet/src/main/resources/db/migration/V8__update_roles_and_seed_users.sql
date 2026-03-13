@@ -1,18 +1,18 @@
 -- Migration: Update roles and seed test users
--- Consolidates HR_ADMIN and IT_ADMIN into ADMIN role
+-- Consolidates HR_HR and IT_HR into HR role
 -- Creates 3 test users with BCrypt-hashed passwords
 
--- Step 1: Update existing HR_ADMIN and IT_ADMIN roles to ADMIN
-UPDATE user_roles SET role = 'ADMIN' WHERE role IN ('HR_ADMIN', 'IT_ADMIN');
+-- Step 1: Update existing HR_HR and IT_HR roles to HR
+UPDATE user_roles SET role = 'HR' WHERE role IN ('HR_HR', 'IT_HR');
 
 -- Step 2: Create test users if they don't exist
 -- BCrypt hashed passwords (cost factor 10):
--- Password: Admin123!
+-- Password: Hr123!
 INSERT INTO users (id, full_name, email, password, is_active)
 VALUES (
     gen_random_uuid(),
-    'Admin User',
-    'admin@iberia.tn',
+    'HR User',
+    'hr@iberia.tn',
     '$2a$10$N3c.8b7eP.qU9p7p29NqfuI8vT8p7yZ3KqW9X0k7Q8b7L0p7N8b7K',
     true
 )
@@ -53,16 +53,16 @@ SET password = EXCLUDED.password,
 -- Delete existing roles for test users to avoid duplicates
 DELETE FROM user_roles 
 WHERE user_id IN (
-    SELECT id FROM users WHERE email IN ('admin@iberia.tn', 'manager@iberia.tn', 'collaborator@iberia.tn')
+    SELECT id FROM users WHERE email IN ('hr@iberia.tn', 'collaborator@iberia.tn')
 );
 
--- Assign ADMIN role to admin@iberia.tn
+-- Assign HR role to hr@iberia.tn
 INSERT INTO user_roles (id, role, user_id)
-SELECT gen_random_uuid(), 'ADMIN', id FROM users WHERE email = 'admin@iberia.tn';
+SELECT gen_random_uuid(), 'HR', id FROM users WHERE email = 'hr@iberia.tn';
 
--- Assign MANAGER role to manager@iberia.tn
+-- Assign HR role to manager@iberia.tn
 INSERT INTO user_roles (id, role, user_id)
-SELECT gen_random_uuid(), 'MANAGER', id FROM users WHERE email = 'manager@iberia.tn';
+SELECT gen_random_uuid(), 'HR', id FROM users WHERE email = 'manager@iberia.tn';
 
 -- Assign COLLABORATOR role to collaborator@iberia.tn
 INSERT INTO user_roles (id, role, user_id)

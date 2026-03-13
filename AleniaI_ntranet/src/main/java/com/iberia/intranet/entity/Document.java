@@ -33,7 +33,7 @@ public class Document {
 
     @Column(name = "access_level", nullable = false)
     private String accessLevel;
-    // e.g., "ALL", "MANAGER_ONLY", "ADMIN_ONLY"
+    // e.g., "ALL", "HR_ONLY"
 
     private String department;
 

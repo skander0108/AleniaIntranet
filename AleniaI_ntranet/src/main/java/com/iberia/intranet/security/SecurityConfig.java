@@ -90,16 +90,16 @@ public class SecurityConfig {
                         // Chat endpoints (authenticated users)
                         .requestMatchers("/api/chat/**").authenticated()
 
-                        // Admin-only endpoints
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        // HR-only endpoints
+                        .requestMatchers("/api/hr/**").hasRole("HR")
 
-                        // Manager or Admin only for creating/updating/deleting content
+                        // HR only for creating/updating/deleting content
                         .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/announcements/**")
-                        .hasAnyRole("MANAGER", "ADMIN")
+                        .hasAnyRole("HR")
                         .requestMatchers(org.springframework.http.HttpMethod.PUT, "/api/announcements/**")
-                        .hasAnyRole("MANAGER", "ADMIN")
+                        .hasAnyRole("HR")
                         .requestMatchers(org.springframework.http.HttpMethod.DELETE, "/api/announcements/**")
-                        .hasAnyRole("MANAGER", "ADMIN")
+                        .hasAnyRole("HR")
 
                         // Event Registration (Authenticated users)
                         .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/events/*/register")
@@ -108,18 +108,18 @@ public class SecurityConfig {
                         .authenticated()
 
                         .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/events/**")
-                        .hasAnyRole("MANAGER", "ADMIN")
+                        .hasAnyRole("HR")
                         .requestMatchers(org.springframework.http.HttpMethod.PUT, "/api/events/**")
-                        .hasAnyRole("MANAGER", "ADMIN")
+                        .hasAnyRole("HR")
                         .requestMatchers(org.springframework.http.HttpMethod.DELETE, "/api/events/**")
-                        .hasAnyRole("MANAGER", "ADMIN")
+                        .hasAnyRole("HR")
 
                         .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/joiners/**")
-                        .hasAnyRole("MANAGER", "ADMIN")
+                        .hasAnyRole("HR")
                         .requestMatchers(org.springframework.http.HttpMethod.PUT, "/api/joiners/**")
-                        .hasAnyRole("MANAGER", "ADMIN")
+                        .hasAnyRole("HR")
                         .requestMatchers(org.springframework.http.HttpMethod.DELETE, "/api/joiners/**")
-                        .hasAnyRole("MANAGER", "ADMIN")
+                        .hasAnyRole("HR")
 
                         // SSE Endpoint
                         .requestMatchers("/api/notifications/stream").authenticated()

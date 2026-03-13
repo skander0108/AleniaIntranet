@@ -33,7 +33,7 @@ export class EventsPageComponent implements OnInit {
   // State
   categories = ['All Events', 'Corporate', 'Training', 'Social', 'Wellness'];
   currentCategory = 'All Events';
-  isManager = false;
+  isHR = false;
 
   // Calendar State
   currentDate = new Date();
@@ -41,7 +41,7 @@ export class EventsPageComponent implements OnInit {
 
   ngOnInit(): void {
     // Check permissions
-    this.isManager = this.authService.hasRole('MANAGER') || this.authService.hasRole('ADMIN');
+    this.isHR = this.authService.hasRole('MANAGER') || this.authService.hasRole('HR');
 
     this.loadEvents();
     this.loadMyEvents();

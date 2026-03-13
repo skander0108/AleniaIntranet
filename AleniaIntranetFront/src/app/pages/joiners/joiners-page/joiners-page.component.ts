@@ -29,7 +29,7 @@ export class JoinersPageComponent implements OnInit {
     currentLocation: string | null = null;
     departments = DEPARTMENTS.filter(d => d !== 'All Departments');
 
-    isManager = false;
+    isHR = false;
 
     // Org Chart Employees
     allOrgEmployees: OrgNode[] = [];
@@ -64,7 +64,7 @@ export class JoinersPageComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.isManager = this.authService.hasRole('MANAGER') || this.authService.hasRole('ADMIN');
+        this.isHR = this.authService.hasRole('HR') || this.authService.hasRole('ROLE_HR');
         this.loadJoiners();
         this.loadOrgEmployees();
 

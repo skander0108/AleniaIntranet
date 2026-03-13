@@ -1,11 +1,14 @@
 import { Component, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
-import { DashboardService, Tool, Announcement } from '../../core/services/dashboard.service';
+import { Router, RouterModule } from '@angular/router';
+import { forkJoin } from 'rxjs';
+import { DashboardService, Tool, Announcement, Event } from '../../core/services/dashboard.service';
 import { SearchService } from '../../core/services/search';
+import { AuthService } from '../../core/services/auth.service';
 import { ExternalHubsComponent } from '../../widgets/external-hubs/external-hubs.component';
 import { NewJoinersComponent } from '../../widgets/new-joiners/new-joiners.component';
 import { EventsComponent } from '../../widgets/events/events.component';
+import { RecentDocumentsComponent } from '../../widgets/recent-documents/recent-documents.component';
 
 interface UiAnnouncement extends Announcement {
     description: string;
@@ -23,9 +26,11 @@ interface UiAnnouncement extends Announcement {
     standalone: true,
     imports: [
         CommonModule,
+        RouterModule,
         ExternalHubsComponent,
         NewJoinersComponent,
-        EventsComponent
+        EventsComponent,
+        RecentDocumentsComponent
     ],
     templateUrl: './dashboard.component.html',
     styleUrl: './dashboard.component.css'
@@ -34,10 +39,14 @@ export class DashboardComponent {
     private dashboardService = inject(DashboardService);
     private router = inject(Router);
     private searchService = inject(SearchService);
+    private authService = inject(AuthService);
 
     tools = signal<Tool[]>([]);
     feed = signal<UiAnnouncement[]>([]);
     featuredNews = signal<Announcement | null>(null);
+    greeting = signal<string>('Welcome');
+    userName = signal<string>('');
+    visibleFeedCount = signal<number>(5);
 
     filteredTools = computed(() => {
         const query = this.searchService.searchQuery().toLowerCase();
@@ -50,13 +59,20 @@ export class DashboardComponent {
 
     filteredFeed = computed(() => {
         const query = this.searchService.searchQuery().toLowerCase();
-        if (!query) return this.feed();
-        return this.feed().filter(f =>
-            f.title.toLowerCase().includes(query) ||
-            (f.description && f.description.toLowerCase().includes(query)) ||
-            (f.category && f.category.toLowerCase().includes(query))
-        );
+        let items = this.feed();
+        if (query) {
+            items = items.filter(f =>
+                f.title.toLowerCase().includes(query) ||
+                (f.description && f.description.toLowerCase().includes(query)) ||
+                (f.category && f.category.toLowerCase().includes(query))
+            );
+        }
+        return items.slice(0, this.visibleFeedCount());
     });
+
+    loadMoreFeed() {
+        this.visibleFeedCount.update(v => v + 5);
+    }
 
     // Computed or derived state for the Hero section
     get heroNews(): Announcement | null {
@@ -83,38 +99,64 @@ export class DashboardComponent {
     }
 
     constructor() {
-        this.dashboardService.getTools().subscribe(data => {
-            const kbTool: Tool = {
-                id: 'kb',
-                name: 'Knowledge Base',
-                url: '/knowledge-base',
-                icon: 'menu_book',
+        // Time-based greeting
+        const hour = new Date().getHours();
+        if (hour < 12) this.greeting.set('Good morning');
+        else if (hour < 18) this.greeting.set('Good afternoon');
+        else this.greeting.set('Good evening');
+
+        const user = this.authService.getCurrentUser();
+        if (user) {
+            this.userName.set(user.fullName.split(' ')[0]);
+        }
+
+        this.tools.set([
+            {
+                id: 'docs',
+                name: 'Documents',
+                url: '/documents',
+                icon: 'folder_open',
                 colorTheme: 'blue',
-                description: 'Guides & Policies'
-            };
-
-            const itTool: Tool = {
-                id: 'it',
-                name: 'IT Support',
-                url: '/it-support/my',
-                icon: 'support_agent',
-                colorTheme: 'purple',
-                description: 'Tech Help'
-            };
-
-            const lmsTool: Tool = {
+                description: 'Files & Policies'
+            },
+            {
                 id: 'lms',
                 name: 'My Learning',
                 url: '/lms/my-progress',
                 icon: 'school',
                 colorTheme: 'green',
                 description: 'Training'
-            };
-
-            this.tools.set([...data, kbTool, itTool, lmsTool]);
-        });
-        this.dashboardService.getNewsFeed().subscribe(data => {
-            this.feed.set(data.map(a => ({
+            },
+            {
+                id: 'teams',
+                name: 'Teams',
+                url: 'https://teams.microsoft.com',
+                icon: 'groups',
+                colorTheme: 'purple',
+                description: 'Chat & Meetings'
+            },
+            {
+                id: 'excel',
+                name: 'Excel',
+                url: 'https://www.office.com/launch/excel',
+                icon: 'table_view',
+                colorTheme: 'green',
+                description: 'Spreadsheets'
+            },
+            {
+                id: 'word',
+                name: 'Word',
+                url: 'https://www.office.com/launch/word',
+                icon: 'description',
+                colorTheme: 'blue',
+                description: 'Documents'
+            }
+        ]);
+        forkJoin({
+            announcements: this.dashboardService.getNewsFeed(),
+            events: this.dashboardService.getUpcomingEvents()
+        }).subscribe(({ announcements, events }) => {
+            const announcementItems: UiAnnouncement[] = announcements.map(a => ({
                 ...a,
                 description: a.summary || '',
                 time: this.getRelativeTime(a.publishedAt),
@@ -122,7 +164,26 @@ export class DashboardComponent {
                 type: a.category?.toLowerCase() || 'news',
                 icon: this.getCategoryIcon(a.category),
                 image: this.formatImageUrl(a.imageUrl)
-            } as UiAnnouncement)));
+            } as UiAnnouncement));
+
+            const eventItems: UiAnnouncement[] = events.map(e => ({
+                id: e.id,
+                title: e.title,
+                content: '',
+                publishedAt: e.eventDate + 'T' + (e.eventTime || '00:00'),
+                status: 'PUBLISHED',
+                summary: (e.location ? '📍 ' + e.location + ' — ' : '') + e.eventDate,
+                description: (e.location ? '📍 ' + e.location + ' — ' : '') + e.eventDate,
+                time: this.getRelativeTime(e.eventDate + 'T' + (e.eventTime || '00:00')),
+                badge: 'Events',
+                type: 'events',
+                icon: 'event',
+                image: this.formatImageUrl(e.imageUrl)
+            } as UiAnnouncement));
+
+            const merged = [...announcementItems, ...eventItems]
+                .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+            this.feed.set(merged);
         });
         this.dashboardService.getFeaturedNews().subscribe({
             next: (data) => {

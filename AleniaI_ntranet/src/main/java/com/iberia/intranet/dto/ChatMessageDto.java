@@ -15,7 +15,7 @@ import java.util.UUID;
 public class ChatMessageDto {
     private UUID id;
     private UUID conversationId;
-    private String senderType; // USER, BOT, ADMIN
+    private String senderType; // USER, BOT, HR
     private UUID senderId;
     private String senderName;
     private String content;

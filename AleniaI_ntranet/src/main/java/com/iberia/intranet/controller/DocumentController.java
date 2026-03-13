@@ -23,7 +23,7 @@ public class DocumentController {
     private final DocumentService documentService;
 
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @PreAuthorize("hasRole('HR')")
     public ResponseEntity<Document> uploadDocument(
             @RequestParam("file") MultipartFile file,
             @RequestParam("title") String title,
@@ -61,7 +61,7 @@ public class DocumentController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('HR')")
     public ResponseEntity<Document> updateDocument(
             @PathVariable("id") Long id,
             @RequestParam("title") String title,
@@ -74,7 +74,7 @@ public class DocumentController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('HR')")
     public ResponseEntity<Void> deleteDocument(@PathVariable("id") Long id) {
         documentService.deleteDocument(id);
         return ResponseEntity.ok().build();

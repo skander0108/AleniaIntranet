@@ -44,8 +44,8 @@ CREATE TABLE lms_sync_log (
 -- Ensure manager_id exists on users
 ALTER TABLE users ADD COLUMN IF NOT EXISTS manager_id UUID REFERENCES users(id);
 
--- Set up manager relationships
-UPDATE users SET manager_id = (SELECT id FROM users WHERE email = 'manager@iberia.tn')
+
+
 WHERE email = 'collaborator@iberia.tn';
 
 

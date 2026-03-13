@@ -124,9 +124,9 @@
                             <span
                                 class="material-symbols-outlined text-gray-400 hover:text-primary cursor-pointer text-[20px]">more_vert</span>
                         </div>
-                        <div class="size-16 rounded-full overflow-hidden border-2 border-primary mb-3 shadow-sm">
-                            <img class="w-full h-full object-cover" [src]="filteredTree.avatarUrl"
-                                [alt]="filteredTree.fullName" />
+                        <div
+                            class="size-16 rounded-full overflow-hidden border-2 border-primary mb-3 shadow-sm bg-gray-100 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-4xl text-gray-400">person</span>
                         </div>
                         <h3 class="text-[#111418] dark:text-white font-bold text-lg leading-tight">{{
                             filteredTree.fullName }}</h3>
@@ -168,8 +168,9 @@
                             </span>
                         </div>
 
-                        <div class="size-12 rounded-full overflow-hidden border border-gray-200 mb-2">
-                            <img class="w-full h-full object-cover" [src]="cLevel.avatarUrl" [alt]="cLevel.fullName" />
+                        <div
+                            class="size-12 rounded-full overflow-hidden border border-gray-200 mb-2 bg-gray-100 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-2xl text-gray-400">person</span>
                         </div>
                         <h3 class="text-[#111418] dark:text-white font-bold text-base leading-tight">{{ cLevel.fullName
                             }}</h3>
@@ -194,9 +195,9 @@
                             <div (click)="openEmployeeDetails(manager, $event)"
                                 class="relative group flex flex-col items-start bg-white dark:bg-[#1a202c] rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 p-3 w-48 hover:border-primary/50 transition-colors cursor-pointer">
                                 <div class="flex items-center gap-3 mb-2">
-                                    <div class="size-10 rounded-full overflow-hidden border border-gray-100">
-                                        <img class="w-full h-full object-cover" [src]="manager.avatarUrl"
-                                            [alt]="manager.fullName" />
+                                    <div
+                                        class="size-10 rounded-full overflow-hidden border border-gray-100 bg-gray-100 flex items-center justify-center shrink-0">
+                                        <span class="material-symbols-outlined text-xl text-gray-400">person</span>
                                     </div>
                                     <div>
                                         <h4 class="text-[#111418] dark:text-white font-semibold text-sm">{{
@@ -289,9 +290,8 @@
         <div class="px-6 pb-8 -mt-14">
             <!-- Avatar -->
             <div
-                class="size-28 rounded-full border-4 border-white dark:border-[#1a202c] overflow-hidden shadow-lg mb-4">
-                <img class="w-full h-full object-cover" [src]="selectedEmployee.avatarUrl"
-                    [alt]="selectedEmployee.fullName" />
+                class="size-28 rounded-full border-4 border-white dark:border-[#1a202c] overflow-hidden shadow-lg mb-4 bg-gray-100 flex items-center justify-center">
+                <span class="material-symbols-outlined text-6xl text-gray-400">person</span>
             </div>
 
             <!-- Name & Title -->

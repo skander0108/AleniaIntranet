@@ -6,9 +6,11 @@ import { Observable } from 'rxjs';
 export interface Event {
     id: string;
     title: string;
+    description?: string;
     eventDate: string;
     eventTime: string;
     location: string;
+    imageUrl?: string;
     type?: 'indigo' | 'orange' | 'green' | 'blue'; // Optional UI property
 }
 

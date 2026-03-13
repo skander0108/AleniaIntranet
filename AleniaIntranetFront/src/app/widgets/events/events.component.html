@@ -1,6 +1,24 @@
 <div
     class="bg-surface-light dark:bg-surface-dark p-6 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm">
     <h3 class="text-base font-bold text-text-main dark:text-white mb-4">Upcoming Events</h3>
+
+    <!-- Next Event Countdown Banner -->
+    <div *ngIf="nextEvent() as next"
+        class="flex items-center gap-3 p-3 mb-4 rounded-xl bg-gradient-to-r from-primary/10 to-blue-500/10 dark:from-primary/20 dark:to-blue-500/20 border border-primary/20">
+        <div class="flex items-center justify-center w-10 h-10 rounded-full bg-primary/15 text-primary shrink-0">
+            <span class="material-symbols-outlined text-xl">timer</span>
+        </div>
+        <div class="flex-1 min-w-0">
+            <p class="text-xs text-text-muted dark:text-gray-400">Next event</p>
+            <p class="text-sm font-bold text-text-main dark:text-white truncate">{{ next.title }}</p>
+        </div>
+        <div class="text-right shrink-0">
+            <span class="text-2xl font-black text-primary">{{ next.daysUntil }}</span>
+            <p class="text-[10px] font-semibold text-primary uppercase">{{ next.daysUntil === 0 ? 'Today!' :
+                next.daysUntil === 1 ? 'Day left' : 'Days left' }}</p>
+        </div>
+    </div>
+
     <div class="space-y-4">
         <div *ngFor="let event of events()" class="flex gap-3">
             <div class="flex flex-col items-center justify-center w-12 h-14 rounded-lg shrink-0"
@@ -8,9 +26,13 @@
                 <span class="text-xs font-bold uppercase" [ngClass]="getTextClass(event)">{{ event.month }}</span>
                 <span class="text-lg font-black" [ngClass]="getNumberClass(event)">{{ event.day }}</span>
             </div>
-            <div>
+            <div class="flex-1">
                 <p class="text-sm font-bold text-text-main dark:text-white leading-tight mb-1">{{ event.title }}</p>
                 <p class="text-xs text-text-muted">{{ event.time }} • {{ event.location }}</p>
+                <span
+                    class="inline-block mt-1 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-primary/10 text-primary">
+                    {{ event.daysUntil }}
+                </span>
             </div>
         </div>
     </div>

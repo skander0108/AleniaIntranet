@@ -1,0 +1,89 @@
+<div class="container mx-auto px-4 py-8 max-w-2xl">
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-800">Create Event</h1>
+    </div>
+
+    <div *ngIf="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
+        role="alert">
+        <span class="block sm:inline">{{ error }}</span>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="title">
+                Title
+            </label>
+            <input formControlName="title"
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="title" type="text" placeholder="Event Title">
+        </div>
+
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="description">
+                Description
+            </label>
+            <textarea formControlName="description"
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="description" rows="4" placeholder="Event Description"></textarea>
+        </div>
+
+        <div class="mb-6">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="image">
+                Event Image (Optional)
+            </label>
+            <div class="flex items-center space-x-4">
+                <input type="file" (change)="onFileSelected($event)" accept="image/*"
+                    class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100" />
+                <span *ngIf="uploading" class="text-sm text-orange-600">Uploading...</span>
+            </div>
+
+            <!-- Image Preview -->
+            <div *ngIf="previewImageUrl" class="mt-4">
+                <p class="text-sm text-gray-600 mb-2">Current Image:</p>
+                <img [src]="previewImageUrl" alt="Preview" class="h-48 w-auto object-cover rounded-lg shadow-sm border">
+                <input type="hidden" formControlName="imageUrl">
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 mb-4">
+            <div>
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="eventDate">
+                    Date
+                </label>
+                <input formControlName="eventDate"
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="eventDate" type="date">
+            </div>
+
+            <div>
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="eventTime">
+                    Time
+                </label>
+                <input formControlName="eventTime"
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="eventTime" type="time">
+            </div>
+        </div>
+
+        <div class="mb-6">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="location">
+                Location
+            </label>
+            <input formControlName="location"
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="location" type="text" placeholder="Meeting Room A">
+        </div>
+
+        <div class="flex items-center justify-between">
+            <button [disabled]="loading || form.invalid"
+                class="bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:opacity-50"
+                type="submit">
+                Create Event
+            </button>
+            <a routerLink="/hr"
+                class="inline-block align-baseline font-bold text-sm text-orange-600 hover:text-orange-800">
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>

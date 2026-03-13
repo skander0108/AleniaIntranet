@@ -43,7 +43,7 @@ public class NewJoinerController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('HR')")
     @Operation(summary = "Create a new joiner")
     public ResponseEntity<NewJoinerDto> createJoiner(
             @RequestParam("fullName") String fullName,
@@ -58,7 +58,7 @@ public class NewJoinerController {
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('HR')")
     @Operation(summary = "Update a new joiner")
     public ResponseEntity<NewJoinerDto> updateJoiner(
             @PathVariable("id") UUID id,
@@ -88,7 +88,7 @@ public class NewJoinerController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('HR')")
     @Operation(summary = "Delete a new joiner")
     public ResponseEntity<Void> deleteJoiner(@PathVariable("id") UUID id) {
         newJoinerService.deleteJoiner(id);

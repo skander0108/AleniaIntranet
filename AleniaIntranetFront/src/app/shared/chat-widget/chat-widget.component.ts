@@ -80,15 +80,15 @@ import { ChatService, ChatMessage } from '../../core/services/chat.service';
                     class="flex animate-msg-in"
                     [ngClass]="msg.senderType === 'USER' ? 'justify-end' : 'justify-start'">
 
-                    <!-- Bot/Admin avatar -->
+                    <!-- Bot/HR avatar -->
                     <div *ngIf="msg.senderType !== 'USER'" class="shrink-0 mr-2 mt-1">
                         <div class="size-7 rounded-full flex items-center justify-center" [ngClass]="{
                             'bg-primary/10': msg.senderType === 'BOT',
-                            'bg-green-100 dark:bg-green-900/30': msg.senderType === 'ADMIN'
+                            'bg-green-100 dark:bg-green-900/30': msg.senderType === 'HR'
                         }">
                             <span class="material-symbols-outlined text-[16px]" [ngClass]="{
                                 'text-primary': msg.senderType === 'BOT',
-                                'text-green-600': msg.senderType === 'ADMIN'
+                                'text-green-600': msg.senderType === 'HR'
                             }">
                                 {{ msg.senderType === 'BOT' ? 'smart_toy' : 'support_agent' }}
                             </span>
@@ -97,14 +97,14 @@ import { ChatService, ChatMessage } from '../../core/services/chat.service';
 
                     <!-- Message bubble -->
                     <div class="max-w-[78%]">
-                        <!-- Sender name for admin -->
-                        <div *ngIf="msg.senderType === 'ADMIN' && msg.senderName" class="text-[10px] font-bold text-green-600 dark:text-green-400 mb-0.5 ml-1">
+                        <!-- Sender name for hr -->
+                        <div *ngIf="msg.senderType === 'HR' && msg.senderName" class="text-[10px] font-bold text-green-600 dark:text-green-400 mb-0.5 ml-1">
                             {{ msg.senderName }}
                         </div>
                         <div class="px-3.5 py-2.5 rounded-2xl text-sm leading-relaxed whitespace-pre-line"
                             [ngClass]="msg.senderType === 'USER'
                                 ? 'bg-primary text-white rounded-br-md'
-                                : msg.senderType === 'ADMIN'
+                                : msg.senderType === 'HR'
                                     ? 'bg-green-50 dark:bg-green-900/20 text-[#111418] dark:text-green-100 border border-green-200 dark:border-green-800 rounded-bl-md shadow-sm'
                                     : 'bg-white dark:bg-gray-800 text-[#111418] dark:text-gray-200 border border-gray-100 dark:border-gray-700 rounded-bl-md shadow-sm'">
                             {{ msg.content }}

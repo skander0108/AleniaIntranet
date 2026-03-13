@@ -45,7 +45,7 @@ public class EventController {
     }
 
     @GetMapping("/my")
-    @Operation(summary = "Get my events (Manager/Admin)")
+    @Operation(summary = "Get my events (Manager/HR)")
     public List<Event> getMyEvents(Authentication authentication) {
         User user = getUser(authentication);
         if (user == null) {

@@ -57,76 +57,46 @@ export const routes: Routes = [
                 path: 'joiners/manage',
                 loadComponent: () => import('./pages/joiners/joiner-management/joiner-management.component').then(m => m.JoinerManagementComponent),
                 canActivate: [roleGuard],
-                data: { roles: ['MANAGER', 'ADMIN'] }
-            },
-            {
-                path: 'admin-panel',
-                loadComponent: () => import('./pages/admin/admin-support-portal/admin-support-portal.component').then(m => m.AdminSupportPortalComponent),
-                canActivate: [roleGuard],
-                data: { roles: ['ADMIN'] }
-            },
-            {
-                path: 'it-support/create',
-                loadComponent: () => import('./pages/it-support/ticket-create/ticket-create.component').then(m => m.TicketCreateComponent)
-            },
-            {
-                path: 'it-support/my',
-                loadComponent: () => import('./pages/it-support/my-tickets/my-tickets.component').then(m => m.MyTicketsComponent)
-            },
-            {
-                path: 'it-support/:id',
-                loadComponent: () => import('./pages/it-support/ticket-detail/ticket-detail.component').then(m => m.TicketDetailComponent)
+                data: { roles: ['HR'] }
             },
 
+            // HR Chat Support
             {
-                path: 'admin/it-support',
-                loadComponent: () => import('./pages/it-support/admin/admin-tickets-list/admin-tickets-list.component').then(m => m.AdminTicketsListComponent),
+                path: 'hr/chat-support',
+                loadComponent: () => import('./pages/hr/hr-chat-dashboard/hr-chat-dashboard.component').then(m => m.HrChatDashboardComponent),
                 canActivate: [roleGuard],
-                data: { roles: ['ADMIN'] }
+                data: { roles: ['HR'] }
+            },
+            // HR Admin Routes
+            {
+                path: 'hr',
+                loadComponent: () => import('./pages/hr/hr-board/hr-board').then(m => m.HrBoardComponent),
+                canActivate: [roleGuard],
+                data: { roles: ['HR'] }
             },
             {
-                path: 'admin/it-support/:id',
-                loadComponent: () => import('./pages/it-support/admin/admin-ticket-detail/admin-ticket-detail.component').then(m => m.AdminTicketDetailComponent),
+                path: 'hr/announcements/create',
+                loadComponent: () => import('./pages/hr/announcement-form/announcement-form').then(m => m.AnnouncementForm),
                 canActivate: [roleGuard],
-                data: { roles: ['ADMIN'] }
-            },
-            // Admin Chat Support
-            {
-                path: 'admin/chat-support',
-                loadComponent: () => import('./pages/admin/admin-chat-dashboard/admin-chat-dashboard.component').then(m => m.AdminChatDashboardComponent),
-                canActivate: [roleGuard],
-                data: { roles: ['ADMIN'] }
-            },
-            // Manager Routes
-            {
-                path: 'manager',
-                loadComponent: () => import('./pages/manager/manager-dashboard/manager-dashboard').then(m => m.ManagerDashboardComponent),
-                canActivate: [roleGuard],
-                data: { roles: ['MANAGER', 'ADMIN'] }
+                data: { roles: ['HR'] }
             },
             {
-                path: 'manager/announcements/create',
-                loadComponent: () => import('./pages/manager/announcement-form/announcement-form').then(m => m.AnnouncementForm),
+                path: 'hr/announcements/edit/:id',
+                loadComponent: () => import('./pages/hr/announcement-form/announcement-form').then(m => m.AnnouncementForm),
                 canActivate: [roleGuard],
-                data: { roles: ['MANAGER', 'ADMIN'] }
+                data: { roles: ['HR'] }
             },
             {
-                path: 'manager/announcements/edit/:id',
-                loadComponent: () => import('./pages/manager/announcement-form/announcement-form').then(m => m.AnnouncementForm),
+                path: 'hr/events/create',
+                loadComponent: () => import('./pages/hr/event-form/event-form').then(m => m.EventForm),
                 canActivate: [roleGuard],
-                data: { roles: ['MANAGER', 'ADMIN'] }
+                data: { roles: ['HR'] }
             },
             {
-                path: 'manager/events/create',
-                loadComponent: () => import('./pages/manager/event-form/event-form').then(m => m.EventForm),
+                path: 'hr/events/edit/:id',
+                loadComponent: () => import('./pages/hr/event-form/event-form').then(m => m.EventForm),
                 canActivate: [roleGuard],
-                data: { roles: ['MANAGER', 'ADMIN'] }
-            },
-            {
-                path: 'manager/events/edit/:id',
-                loadComponent: () => import('./pages/manager/event-form/event-form').then(m => m.EventForm),
-                canActivate: [roleGuard],
-                data: { roles: ['MANAGER', 'ADMIN'] }
+                data: { roles: ['HR'] }
             },
             // LMS Tracking Routes
             {
@@ -134,16 +104,10 @@ export const routes: Routes = [
                 loadComponent: () => import('./pages/lms/lms-my-progress.component').then(m => m.LmsMyProgressComponent)
             },
             {
-                path: 'lms/global-progress',
-                loadComponent: () => import('./pages/lms/lms-global-tracking.component').then(m => m.LmsGlobalTrackingComponent),
-                canActivate: [roleGuard],
-                data: { roles: ['MANAGER', 'ADMIN'] }
-            },
-            {
                 path: 'lms/users-progress',
                 loadComponent: () => import('./pages/lms/users-progress/users-progress.component').then(m => m.UsersProgressComponent),
                 canActivate: [roleGuard],
-                data: { roles: ['MANAGER', 'ADMIN'] }
+                data: { roles: ['HR'] }
             },
             // Document Management Routes
             {
@@ -151,10 +115,10 @@ export const routes: Routes = [
                 loadComponent: () => import('./pages/documents/documents-list/documents-list.component').then(m => m.DocumentsListComponent)
             },
             {
-                path: 'admin/documents',
-                loadComponent: () => import('./pages/admin/admin-documents/admin-documents.component').then(m => m.AdminDocumentsComponent),
+                path: 'hr/documents',
+                loadComponent: () => import('./pages/hr/hr-documents/hr-documents.component').then(m => m.HrDocumentsComponent),
                 canActivate: [roleGuard],
-                data: { roles: ['MANAGER', 'ADMIN'] }
+                data: { roles: ['HR'] }
             },
             // Knowledge Base Routes
             {
@@ -164,10 +128,18 @@ export const routes: Routes = [
             {
                 path: 'knowledge-base/:id',
                 loadComponent: () => import('./pages/knowledge-base/article-detail/article-detail.component').then(m => m.ArticleDetailComponent)
+            },
+            // All Things HR Routes
+            {
+                path: 'hr/spain',
+                loadComponent: () => import('./pages/hr/spain-hr/spain-hr.component').then(m => m.SpainHrComponent)
+            },
+            {
+                path: 'hr/portugal',
+                loadComponent: () => import('./pages/hr/portugal-hr/portugal-hr.component').then(m => m.PortugalHrComponent)
             }
         ]
     },
-
     { path: '**', redirectTo: '' }
 ];
 

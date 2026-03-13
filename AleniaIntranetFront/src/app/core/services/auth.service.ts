@@ -79,6 +79,12 @@ export class AuthService {
     hasRole(role: string): boolean {
         const user = this.getCurrentUser();
         if (!user || !user.roles) return false;
+
+        // If checking for a specific role and user is HR, always return true (HR has all access)
+        if (user.roles.includes('HR') || user.roles.includes('ROLE_HR')) {
+            return true;
+        }
+
         return user.roles.includes(role) || user.roles.includes(`ROLE_${role}`);
     }
 
@@ -91,13 +97,12 @@ export class AuthService {
     }
 
     getRedirectUrl(user: User): string {
-        // Admin users go to admin panel
-        if (user.roles.includes('ADMIN') || user.roles.includes('ROLE_ADMIN')) {
-            return '/admin-panel';
+        // HR users go to hr panel (renamed HR panel essentially)
+        if (user.roles.includes('HR') || user.roles.includes('ROLE_HR')) {
+            return '/hr-panel';
         }
 
-        // Managers and collaborators go to dashboard
-        return '/dashboard';
+        return '/';
     }
 
     private getUserFromStorage(): User | null {

@@ -78,14 +78,14 @@ public class AnnouncementServiceImpl implements AnnouncementService {
         Announcement announcement = announcementRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Announcement not found: " + id));
 
-        // Enforce ownership: Only owner or ADMIN can update
+        // Enforce ownership: Only owner or HR can update
         User managedUser = userRepository.findById(currentUser.getId())
                 .orElseThrow(() -> new NotFoundException("User not found: " + currentUser.getId()));
 
-        boolean isAdmin = managedUser.getRoles().stream()
-                .anyMatch(role -> "ADMIN".equals(role.getRole().name()));
+        boolean isHR = managedUser.getRoles().stream()
+                .anyMatch(role -> "HR".equals(role.getRole().name()));
 
-        if (!isAdmin
+        if (!isHR
                 && (announcement.getUser() == null || !announcement.getUser().getId().equals(currentUser.getId()))) {
             throw new org.springframework.security.access.AccessDeniedException(
                     "You are not authorized to update this announcement");
@@ -122,7 +122,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
             throw new org.springframework.security.access.AccessDeniedException("User not authenticated");
         }
 
-        boolean isAdmin = false;
+        boolean isHR = false;
         try {
             // Re-fetch user to ensuring we have an active session for lazy loading roles
             User managedUser = userRepository.findById(currentUser.getId()).orElse(currentUser);
@@ -130,15 +130,15 @@ public class AnnouncementServiceImpl implements AnnouncementService {
                 // Initialize roles if needed (accessing size triggers initialization if
                 // attached)
                 managedUser.getRoles().isEmpty();
-                isAdmin = managedUser.getRoles().stream()
-                        .anyMatch(role -> "ADMIN".equals(role.getRole().name()));
+                isHR = managedUser.getRoles().stream()
+                        .anyMatch(role -> "HR".equals(role.getRole().name()));
             }
         } catch (Exception e) {
-            // If fetching/checking fails, assume not admin.
-            isAdmin = false;
+            // If fetching/checking fails, assume not HR.
+            isHR = false;
         }
 
-        if (!isAdmin
+        if (!isHR
                 && (announcement.getUser() == null || !announcement.getUser().getId().equals(currentUser.getId()))) {
             throw new org.springframework.security.access.AccessDeniedException(
                     "You are not authorized to delete this announcement");

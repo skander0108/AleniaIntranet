@@ -2,6 +2,16 @@
     <!-- Center Column (Main Feed) -->
     <div class="col-span-12 lg:col-span-8 flex flex-col gap-8">
 
+        <!-- Personalized Greeting -->
+        <section class="flex items-center gap-4">
+            <div class="flex-1">
+                <h2 class="text-2xl font-bold text-text-main dark:text-white">
+                    {{ greeting() }}, {{ userName() }} 👋
+                </h2>
+                <p class="text-text-muted dark:text-gray-400 text-sm mt-1">Here's what's happening today.</p>
+            </div>
+        </section>
+
 
 
         <!-- Hero News Carousel -->
@@ -73,7 +83,8 @@
         <section>
             <div class="flex items-center justify-between mb-5">
                 <h3 class="text-lg font-bold text-text-main dark:text-white">Latest Updates</h3>
-                <button class="text-primary text-sm font-semibold hover:underline">View All</button>
+                <button routerLink="/news-feed" class="text-primary text-sm font-semibold hover:underline">View
+                    All</button>
             </div>
 
             <!-- Empty State -->
@@ -128,6 +139,15 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Load More Button -->
+            <div *ngIf="filteredFeed().length > visibleFeedCount()" class="flex justify-center mt-4">
+                <button (click)="loadMoreFeed()"
+                    class="flex items-center gap-2 px-6 py-2.5 text-sm font-semibold text-primary bg-primary/5 hover:bg-primary/10 rounded-xl transition-colors">
+                    <span class="material-symbols-outlined text-[18px]">expand_more</span>
+                    Load More
+                </button>
+            </div>
         </section>
 
     </div>
@@ -135,6 +155,7 @@
     <!-- Right Column (Sidebar Widgets) -->
     <div class="col-span-12 lg:col-span-4 flex flex-col gap-8">
         <app-external-hubs></app-external-hubs>
+        <app-recent-documents></app-recent-documents>
         <app-new-joiners></app-new-joiners>
         <app-events></app-events>
     </div>

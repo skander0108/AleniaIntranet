@@ -62,7 +62,7 @@ public class ChatConversationService {
 
                 ChatMessageDto userMsgDto = toDto(userMsg, user.getFullName());
 
-                // If already escalated/assigned, just forward to admin via WebSocket
+                // If already escalated/assigned, just forward to hr via WebSocket
                 if (conversation.getStatus() == ChatStatus.ESCALATED
                                 || conversation.getStatus() == ChatStatus.ASSIGNED) {
                         messagingTemplate.convertAndSend(
@@ -103,8 +103,8 @@ public class ChatConversationService {
                                         .build();
                         messageRepo.save(sysMsg);
 
-                        // Notify admins about new escalation
-                        messagingTemplate.convertAndSend("/topic/admin.escalations",
+                        // Notify hr about new escalation
+                        messagingTemplate.convertAndSend("/topic/hr.escalations",
                                         toConversationDto(conversation));
 
                         return List.of(userMsgDto, toDto(sysMsg, "IT Support Bot"));
@@ -127,24 +127,24 @@ public class ChatConversationService {
         }
 
         /**
-         * Admin sends a reply to an escalated conversation.
+         * HR sends a reply to an escalated conversation.
          */
         @Transactional
-        public ChatMessageDto sendAdminReply(UUID conversationId, UUID adminId, String content) {
+        public ChatMessageDto sendHrReply(UUID conversationId, UUID hrId, String content) {
                 ChatConversation conversation = conversationRepo.findById(conversationId)
                                 .orElseThrow(() -> new RuntimeException("Conversation not found"));
-                User admin = userRepo.findById(adminId)
-                                .orElseThrow(() -> new RuntimeException("Admin not found"));
+                User hr = userRepo.findById(hrId)
+                                .orElseThrow(() -> new RuntimeException("HR not found"));
 
-                ChatMessage adminMsg = ChatMessage.builder()
+                ChatMessage hrMsg = ChatMessage.builder()
                                 .conversation(conversation)
-                                .senderType(SenderType.ADMIN)
-                                .senderId(adminId)
+                                .senderType(SenderType.HR)
+                                .senderId(hrId)
                                 .content(content)
                                 .build();
-                messageRepo.save(adminMsg);
+                messageRepo.save(hrMsg);
 
-                ChatMessageDto dto = toDto(adminMsg, admin.getFullName());
+                ChatMessageDto dto = toDto(hrMsg, hr.getFullName());
 
                 // Send to user via WebSocket
                 messagingTemplate.convertAndSend(
@@ -154,41 +154,41 @@ public class ChatConversationService {
         }
 
         /**
-         * Admin assigns themselves to a conversation.
+         * HR assigns themselves to a conversation.
          */
         @Transactional
-        public ChatConversationDto assignToAdmin(UUID conversationId, UUID adminId) {
+        public ChatConversationDto assignToHr(UUID conversationId, UUID hrId) {
                 ChatConversation conversation = conversationRepo.findById(conversationId)
                                 .orElseThrow(() -> new RuntimeException("Conversation not found"));
-                User admin = userRepo.findById(adminId)
-                                .orElseThrow(() -> new RuntimeException("Admin not found"));
+                User hr = userRepo.findById(hrId)
+                                .orElseThrow(() -> new RuntimeException("HR not found"));
 
-                conversation.setAssignedAdmin(admin);
+                conversation.setAssignedHr(hr);
                 conversation.setStatus(ChatStatus.ASSIGNED);
                 conversationRepo.save(conversation);
 
                 // Notify user that an agent joined
-                String joinMsg = "✅ **" + admin.getFullName()
+                String joinMsg = "✅ **" + hr.getFullName()
                                 + "** from IT Support has joined the conversation. How can I help you?";
                 ChatMessage sysMsg = ChatMessage.builder()
                                 .conversation(conversation)
-                                .senderType(SenderType.ADMIN)
-                                .senderId(adminId)
+                                .senderType(SenderType.HR)
+                                .senderId(hrId)
                                 .content(joinMsg)
                                 .build();
                 messageRepo.save(sysMsg);
 
                 messagingTemplate.convertAndSend(
-                                "/topic/conversation." + conversationId, toDto(sysMsg, admin.getFullName()));
+                                "/topic/conversation." + conversationId, toDto(sysMsg, hr.getFullName()));
 
                 return toConversationDto(conversation);
         }
 
         /**
-         * Admin resolves a conversation.
+         * HR resolves a conversation.
          */
         @Transactional
-        public void resolveConversation(UUID conversationId, UUID adminId) {
+        public void resolveConversation(UUID conversationId, UUID hrId) {
                 ChatConversation conversation = conversationRepo.findById(conversationId)
                                 .orElseThrow(() -> new RuntimeException("Conversation not found"));
 
@@ -256,8 +256,8 @@ public class ChatConversationService {
                                 .id(conv.getId())
                                 .userName(conv.getUser().getFullName())
                                 .userEmail(conv.getUser().getEmail())
-                                .assignedAdminName(
-                                                conv.getAssignedAdmin() != null ? conv.getAssignedAdmin().getFullName()
+                                .assignedHrName(
+                                                conv.getAssignedHr() != null ? conv.getAssignedHr().getFullName()
                                                                 : null)
                                 .status(conv.getStatus().name())
                                 .subject(conv.getSubject())

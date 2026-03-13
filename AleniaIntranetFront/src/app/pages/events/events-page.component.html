@@ -20,7 +20,7 @@
                 </p>
             </div>
             <!-- Manager Action -->
-            <button *ngIf="isManager" routerLink="/manager/events/create"
+            <button *ngIf="isHR" routerLink="/hr/events/create"
                 class="flex items-center justify-center gap-2 overflow-hidden rounded-lg h-10 px-4 bg-white dark:bg-gray-800 border border-[#e5e7eb] dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 text-[#111418] dark:text-white text-sm font-bold leading-normal transition-all shadow-sm group">
                 <span class="truncate">Create Event</span>
                 <span
@@ -229,7 +229,7 @@
                 </div>
 
                 <!-- Create Event CTA -->
-                <div *ngIf="isManager"
+                <div *ngIf="isHR"
                     class="bg-gradient-to-br from-primary/10 to-transparent rounded-xl p-5 border border-primary/20">
                     <div class="flex gap-3 mb-3">
                         <div
@@ -241,7 +241,7 @@
                             <p class="text-xs text-[#617289]">Submit your event to the hub.</p>
                         </div>
                     </div>
-                    <button routerLink="/manager/events/create"
+                    <button routerLink="/hr/events/create"
                         class="w-full bg-white dark:bg-gray-700 border border-transparent hover:border-primary/50 text-[#111418] dark:text-white text-sm font-bold py-2 rounded-lg shadow-sm transition-all">
                         Create Event Request
                     </button>

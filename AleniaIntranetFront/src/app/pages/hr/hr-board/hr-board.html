@@ -1,0 +1,306 @@
+<!-- Page Heading + Intro -->
+<div class="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
+    <div class="flex flex-col gap-2">
+        <h1 class="text-[#111418] dark:text-white text-3xl md:text-4xl font-black leading-tight tracking-[-0.033em]">
+            HR Dashboard
+        </h1>
+        <p class="text-[#617289] dark:text-gray-400 text-base font-normal max-w-2xl">
+            Welcome back, {{ userName }}. Manage announcements, events, and team resources from your central hub.
+        </p>
+    </div>
+    <div class="flex gap-3 flex-wrap">
+        <button routerLink="/hr/announcements/create"
+            class="flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-white font-bold hover:bg-blue-600 transition-colors shadow-lg shadow-blue-500/20">
+            <span class="material-symbols-outlined text-[20px]">add</span>
+            <span>New Announcement</span>
+        </button>
+        <button routerLink="/hr/events/create"
+            class="flex items-center gap-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 px-4 py-2.5 text-[#111418] dark:text-white font-bold hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors shadow-sm">
+            <span class="material-symbols-outlined text-[20px]">event</span>
+            <span>New Event</span>
+        </button>
+    </div>
+</div>
+
+<!-- Quick Actions Grid -->
+<div class="mb-10">
+    <h3 class="mb-4 text-xl font-bold text-[#111418] dark:text-white flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary">bolt</span>
+        Quick Actions
+    </h3>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <!-- Action 1: Manage Joiners -->
+        <a routerLink="/joiners/manage"
+            class="group flex flex-col gap-3 rounded-xl border border-[#e5e7eb] dark:border-gray-700 bg-white dark:bg-[#1a2636] p-5 hover:border-primary/50 hover:shadow-md transition-all">
+            <div
+                class="flex h-12 w-12 items-center justify-center rounded-lg bg-green-50 text-green-600 dark:bg-green-900/20 dark:text-green-400 group-hover:scale-110 transition-transform">
+                <span class="material-symbols-outlined text-[28px]">person_add</span>
+            </div>
+            <div>
+                <h4 class="font-bold text-[#111418] dark:text-white">Manage Joiners</h4>
+                <p class="text-xs text-[#617289] dark:text-gray-400 mt-1">New employees & onboarding</p>
+            </div>
+        </a>
+        <!-- Action 2: Team Progress -->
+        <a routerLink="/lms/team-progress"
+            class="group flex flex-col gap-3 rounded-xl border border-[#e5e7eb] dark:border-gray-700 bg-white dark:bg-[#1a2636] p-5 hover:border-primary/50 hover:shadow-md transition-all">
+            <div
+                class="flex h-12 w-12 items-center justify-center rounded-lg bg-purple-50 text-purple-600 dark:bg-purple-900/20 dark:text-purple-400 group-hover:scale-110 transition-transform">
+                <span class="material-symbols-outlined text-[28px]">school</span>
+            </div>
+            <div>
+                <h4 class="font-bold text-[#111418] dark:text-white">Team Progress</h4>
+                <p class="text-xs text-[#617289] dark:text-gray-400 mt-1">LMS & training tracking</p>
+            </div>
+        </a>
+        <!-- Action 4: Org Chart -->
+        <a routerLink="/directory/org-chart"
+            class="group flex flex-col gap-3 rounded-xl border border-[#e5e7eb] dark:border-gray-700 bg-white dark:bg-[#1a2636] p-5 hover:border-primary/50 hover:shadow-md transition-all">
+            <div
+                class="flex h-12 w-12 items-center justify-center rounded-lg bg-orange-50 text-orange-600 dark:bg-orange-900/20 dark:text-orange-400 group-hover:scale-110 transition-transform">
+                <span class="material-symbols-outlined text-[28px]">account_tree</span>
+            </div>
+            <div>
+                <h4 class="font-bold text-[#111418] dark:text-white">Org Chart</h4>
+                <p class="text-xs text-[#617289] dark:text-gray-400 mt-1">Organizational structure</p>
+            </div>
+        </a>
+    </div>
+</div>
+
+<!-- Main Content Grid: 2 Columns for Content, 1 Column for Sidebar -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+    <!-- Left Column: Announcements & Events (Span 2) -->
+    <div class="lg:col-span-2 flex flex-col gap-8">
+
+        <!-- Tabs Widget -->
+        <div
+            class="rounded-xl border border-[#e5e7eb] dark:border-gray-700 bg-white dark:bg-[#1a2636] shadow-sm overflow-hidden">
+            <div class="flex items-center justify-between border-b border-[#e5e7eb] dark:border-gray-700 p-0">
+                <nav class="flex w-full -mb-px" aria-label="Tabs">
+                    <button (click)="setActiveTab('announcements')"
+                        class="flex-1 py-4 px-6 text-center font-medium text-sm transition-colors border-b-2"
+                        [ngClass]="activeTab === 'announcements'
+                    ? 'border-primary text-primary'
+                    : 'border-transparent text-[#617289] hover:text-[#111418] dark:hover:text-white hover:border-gray-300'">
+                        <span class="flex items-center justify-center gap-2">
+                            <span class="material-symbols-outlined text-[20px]">campaign</span>
+                            My Announcements
+                        </span>
+                    </button>
+                    <button (click)="setActiveTab('events')"
+                        class="flex-1 py-4 px-6 text-center font-medium text-sm transition-colors border-b-2"
+                        [ngClass]="activeTab === 'events'
+                    ? 'border-primary text-primary'
+                    : 'border-transparent text-[#617289] hover:text-[#111418] dark:hover:text-white hover:border-gray-300'">
+                        <span class="flex items-center justify-center gap-2">
+                            <span class="material-symbols-outlined text-[20px]">event</span>
+                            My Events
+                        </span>
+                    </button>
+                </nav>
+            </div>
+
+            <!-- Announcements Table -->
+            <div *ngIf="activeTab === 'announcements'" class="flex flex-col">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm text-gray-500 dark:text-gray-400">
+                        <thead class="bg-gray-50 dark:bg-gray-800 text-xs uppercase text-gray-700 dark:text-gray-300">
+                            <tr>
+                                <th class="px-6 py-3 font-semibold" scope="col">Title</th>
+                                <th class="px-6 py-3 font-semibold" scope="col">Status</th>
+                                <th class="px-6 py-3 font-semibold" scope="col">Priority</th>
+                                <th class="px-6 py-3 font-semibold" scope="col">Published</th>
+                                <th class="px-6 py-3 font-semibold text-right" scope="col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-[#e5e7eb] dark:divide-gray-700">
+                            <tr *ngFor="let item of (announcements$ | async)?.content"
+                                class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-3">
+                                        <div
+                                            class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/30 text-primary">
+                                            <span class="material-symbols-outlined text-[20px]">campaign</span>
+                                        </div>
+                                        <div>
+                                            <p
+                                                class="font-semibold text-[#111418] dark:text-white truncate max-w-[200px]">
+                                                {{ item.title }}</p>
+                                            <p class="text-xs text-[#617289] dark:text-gray-400">{{ item.category ||
+                                                'General' }} • {{ item.targetAudience || 'ALL' }}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span [class]="getStatusClass(item.status)">{{ item.status }}</span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span [class]="getPriorityClass(item.priority || 'NORMAL')">{{ item.priority ||
+                                        'NORMAL' }}</span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-[#617289] dark:text-gray-400">
+                                    {{ item.publishedAt | date:'mediumDate' }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <a [routerLink]="['/hr/announcements/edit', item.id]"
+                                        class="text-primary hover:text-blue-700 font-medium text-xs mr-3">Edit</a>
+                                    <button (click)="deleteAnnouncement(item.id)"
+                                        class="text-red-500 hover:text-red-700 font-medium text-xs">Delete</button>
+                                </td>
+                            </tr>
+                            <!-- Empty State -->
+                            <tr *ngIf="(announcements$ | async)?.content?.length === 0">
+                                <td colspan="5" class="px-6 py-16 text-center">
+                                    <span
+                                        class="material-symbols-outlined text-5xl text-gray-300 dark:text-gray-600 block mb-3">campaign</span>
+                                    <p class="text-sm font-medium text-[#111418] dark:text-white">No announcements yet
+                                    </p>
+                                    <p class="text-xs text-[#617289] dark:text-gray-400 mt-1">Create your first
+                                        announcement to get started.</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Events Table -->
+            <div *ngIf="activeTab === 'events'" class="flex flex-col">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm text-gray-500 dark:text-gray-400">
+                        <thead class="bg-gray-50 dark:bg-gray-800 text-xs uppercase text-gray-700 dark:text-gray-300">
+                            <tr>
+                                <th class="px-6 py-3 font-semibold" scope="col">Event</th>
+                                <th class="px-6 py-3 font-semibold" scope="col">Date & Time</th>
+                                <th class="px-6 py-3 font-semibold" scope="col">Location</th>
+                                <th class="px-6 py-3 font-semibold text-right" scope="col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-[#e5e7eb] dark:divide-gray-700">
+                            <tr *ngFor="let item of (events$ | async)"
+                                class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-3">
+                                        <div
+                                            class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-orange-100 dark:bg-orange-900/30 text-orange-600">
+                                            <span class="material-symbols-outlined text-[20px]">event</span>
+                                        </div>
+                                        <p class="font-semibold text-[#111418] dark:text-white truncate max-w-[200px]">
+                                            {{ item.title }}</p>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-[#617289] dark:text-gray-400">
+                                    {{ item.eventDate | date:'mediumDate' }}
+                                    <span class="text-gray-300 dark:text-gray-600 mx-1">|</span>
+                                    {{ item.eventTime }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-[#617289] dark:text-gray-400">
+                                    {{ item.location }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <a [routerLink]="['/hr/events/edit', item.id]"
+                                        class="text-primary hover:text-blue-700 font-medium text-xs mr-3">Edit</a>
+                                    <button (click)="deleteEvent(item.id)"
+                                        class="text-red-500 hover:text-red-700 font-medium text-xs">Delete</button>
+                                </td>
+                            </tr>
+                            <!-- Empty State -->
+                            <tr *ngIf="(events$ | async)?.length === 0">
+                                <td colspan="4" class="px-6 py-16 text-center">
+                                    <span
+                                        class="material-symbols-outlined text-5xl text-gray-300 dark:text-gray-600 block mb-3">event</span>
+                                    <p class="text-sm font-medium text-[#111418] dark:text-white">No events yet</p>
+                                    <p class="text-xs text-[#617289] dark:text-gray-400 mt-1">Create your first event to
+                                        get started.</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Right Column: Contacts & Quick Links -->
+    <div class="flex flex-col gap-8">
+
+        <!-- Direct Contacts Card -->
+        <div class="rounded-xl bg-gradient-to-br from-[#101822] to-[#1e293b] p-6 text-white shadow-md">
+            <h3 class="mb-4 text-lg font-bold">Need Help?</h3>
+            <p class="mb-6 text-sm text-gray-300">Reach out to the specialized teams for urgent matters.</p>
+            <div class="flex flex-col gap-4">
+                <a routerLink="/it-support/create"
+                    class="flex items-center gap-3 rounded-lg bg-white/10 p-3 hover:bg-white/20 transition cursor-pointer">
+                    <div class="flex h-10 w-10 items-center justify-center rounded-full bg-blue-500">
+                        <span class="material-symbols-outlined text-[20px]">support_agent</span>
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-bold text-sm">IT Support Desk</p>
+                        <p class="text-xs text-gray-300">Open a support ticket</p>
+                    </div>
+                    <span class="material-symbols-outlined text-gray-400 text-[20px]">arrow_forward</span>
+                </a>
+                <a routerLink="/knowledge-base"
+                    class="flex items-center gap-3 rounded-lg bg-white/10 p-3 hover:bg-white/20 transition cursor-pointer">
+                    <div class="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500">
+                        <span class="material-symbols-outlined text-[20px]">menu_book</span>
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-bold text-sm">Knowledge Base</p>
+                        <p class="text-xs text-gray-300">Policies & procedures</p>
+                    </div>
+                    <span class="material-symbols-outlined text-gray-400 text-[20px]">arrow_forward</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Stats Overview -->
+        <div class="rounded-xl border border-[#e5e7eb] dark:border-gray-700 bg-white dark:bg-[#1a2636] p-5 shadow-sm">
+            <h3 class="mb-4 font-bold text-lg text-[#111418] dark:text-white">Overview</h3>
+            <div class="flex flex-col gap-4">
+                <div class="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-800">
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/30 text-primary">
+                            <span class="material-symbols-outlined text-[18px]">campaign</span>
+                        </div>
+                        <span class="text-sm font-medium text-[#111418] dark:text-white">My Announcements</span>
+                    </div>
+                    <span class="text-lg font-black text-[#111418] dark:text-white">{{ (announcements$ |
+                        async)?.content?.length || 0 }}</span>
+                </div>
+                <div class="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-800">
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="flex h-9 w-9 items-center justify-center rounded-lg bg-orange-100 dark:bg-orange-900/30 text-orange-600">
+                            <span class="material-symbols-outlined text-[18px]">event</span>
+                        </div>
+                        <span class="text-sm font-medium text-[#111418] dark:text-white">My Events</span>
+                    </div>
+                    <span class="text-lg font-black text-[#111418] dark:text-white">{{ (events$ | async)?.length || 0
+                        }}</span>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- HR Panel Link (HR only) -->
+        <a *ngIf="isHR" routerLink="/hr"
+            class="flex items-center gap-3 rounded-xl border border-[#e5e7eb] dark:border-gray-700 bg-white dark:bg-[#1a2636] p-5 shadow-sm hover:border-primary/50 hover:shadow-md transition-all cursor-pointer">
+            <div
+                class="flex h-12 w-12 items-center justify-center rounded-lg bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400">
+                <span class="material-symbols-outlined text-[28px]">manage_accounts</span>
+            </div>
+            <div class="flex-1">
+                <h4 class="font-bold text-[#111418] dark:text-white">HR Panel</h4>
+                <p class="text-xs text-[#617289] dark:text-gray-400 mt-0.5">Manage users, tickets & system</p>
+            </div>
+            <span class="material-symbols-outlined text-[#617289] text-[20px]">arrow_forward</span>
+        </a>
+
+    </div>
+
+</div>

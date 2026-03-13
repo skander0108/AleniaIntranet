@@ -11,11 +11,11 @@ public class PasswordHashGenerator {
     public static void main(String[] args) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-        String adminPassword = "Admin123!";
+        String hrPassword = "Hr123!";
         String managerPassword = "Manager123!";
         String collaboratorPassword = "User123!";
 
-        String adminHash = encoder.encode(adminPassword);
+        String hrHash = encoder.encode(hrPassword);
         String managerHash = encoder.encode(managerPassword);
         String collaboratorHash = encoder.encode(collaboratorPassword);
 
@@ -24,11 +24,11 @@ public class PasswordHashGenerator {
         System.out.println("=".repeat(80));
         System.out.println();
 
-        System.out.println("Admin Password: " + adminPassword);
-        System.out.println("Hash: " + adminHash);
+        System.out.println("HR Password: " + hrPassword);
+        System.out.println("Hash: " + hrHash);
         System.out.println();
         System.out.println("SQL:");
-        System.out.println("UPDATE users SET password = '" + adminHash + "' WHERE email = 'admin@iberia.tn';");
+        System.out.println("UPDATE users SET password = '" + hrHash + "' WHERE email = 'hr@iberia.tn';");
         System.out.println();
         System.out.println("-".repeat(80));
         System.out.println();

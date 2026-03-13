@@ -16,7 +16,7 @@ public class ChatConversationDto {
     private UUID id;
     private String userName;
     private String userEmail;
-    private String assignedAdminName;
+    private String assignedHrName;
     private String status;
     private String subject;
     private int messageCount;

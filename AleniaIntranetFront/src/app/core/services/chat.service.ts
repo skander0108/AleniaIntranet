@@ -5,10 +5,11 @@ import { environment } from '../../../environments/environment';
 export interface ChatMessage {
     id: string;
     conversationId: string;
-    content: string;
-    senderType: 'USER' | 'BOT' | 'ADMIN';
-    senderId?: string;
+    senderId?: string; // Optional if sender is HR/Bot
     senderName?: string;
+    senderType: 'USER' | 'BOT' | 'HR';
+    content: string;
+    timestamp: string;
     createdAt: string;
 }
 
@@ -16,7 +17,7 @@ export interface ChatConversation {
     id: string;
     userName: string;
     userEmail: string;
-    assignedAdminName?: string;
+    assignedHrName?: string;
     status: 'BOT' | 'ESCALATED' | 'ASSIGNED' | 'RESOLVED';
     subject?: string;
     messageCount: number;
@@ -45,6 +46,7 @@ export class ChatService {
             content: '👋 Hello! I\'m the Alenia IT Support Bot.\n\nI can help you with:\n• 🔑 Password reset\n• 🌐 VPN connection\n• 📧 Email / Outlook issues\n• 💿 Software installation\n• 🖨️ Printer setup\n• 💬 Teams / meetings\n• 📶 Wi-Fi / network\n\nWhat do you need help with?',
             senderType: 'BOT',
             senderName: 'IT Support Bot',
+            timestamp: new Date().toISOString(),
             createdAt: new Date().toISOString()
         }]);
     }
@@ -57,6 +59,7 @@ export class ChatService {
             content,
             senderType: 'USER',
             senderName: 'You',
+            timestamp: new Date().toISOString(),
             createdAt: new Date().toISOString()
         };
         this.messages.update(msgs => [...msgs, tempUserMsg]);
@@ -93,6 +96,7 @@ export class ChatService {
                         content: '⚠️ Unable to send message. Please try again.',
                         senderType: 'BOT',
                         senderName: 'System',
+                        timestamp: new Date().toISOString(),
                         createdAt: new Date().toISOString()
                     }]);
                 }
@@ -100,7 +104,7 @@ export class ChatService {
     }
 
     /**
-     * Connect to WebSocket for real-time admin messages on an escalated conversation.
+     * Connect to WebSocket for real-time hr messages on an escalated conversation.
      */
     private connectWebSocket(conversationId: string): void {
         if (this.wsConnected) return;
@@ -121,19 +125,21 @@ export class ChatService {
 
         this.stompClient.connect({}, () => {
             this.wsConnected = true;
-            this.stompClient.subscribe(`/topic/conversation.${conversationId}`, (frame: any) => {
-                const message: ChatMessage = JSON.parse(frame.body);
-                // Avoid duplicates
-                this.messages.update(msgs => {
-                    if (msgs.some(m => m.id === message.id)) return msgs;
-                    return [...msgs, message];
-                });
-
-                // Update status if admin joined
-                if (message.senderType === 'ADMIN' && message.content.includes('has joined')) {
+            this.stompClient.subscribe(`/topic/messages/${this.conversationId()}`, (frame: any) => {
+                const parsedMessage: ChatMessage = JSON.parse(frame.body);
+                // If HR joins, trigger escalation UI automatically if it's the first time
+                if (parsedMessage.senderType === 'HR' && parsedMessage.content.includes('has joined')) {
+                    // Assuming escalateToHuman() is a method that would update the UI/status
+                    // For now, we'll just set the status to ASSIGNED as HR has joined.
                     this.conversationStatus.set('ASSIGNED');
                 }
-                if (message.content.includes('marked as resolved')) {
+                // Avoid duplicates
+                this.messages.update(msgs => {
+                    if (msgs.some(m => m.id === parsedMessage.id)) return msgs;
+                    return [...msgs, parsedMessage];
+                });
+
+                if (parsedMessage.content.includes('marked as resolved')) {
                     this.conversationStatus.set('RESOLVED');
                 }
             });
@@ -178,6 +184,7 @@ export class ChatService {
             content: '👋 Chat cleared. How can I help you?',
             senderType: 'BOT',
             senderName: 'IT Support Bot',
+            timestamp: new Date().toISOString(),
             createdAt: new Date().toISOString()
         }]);
     }

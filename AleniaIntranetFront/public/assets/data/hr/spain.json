@@ -1,0 +1,243 @@
+{
+    "country": "Spain",
+    "flag": "🇪🇸",
+    "title": "All Things HR Spain",
+    "sections": [
+        {
+            "id": "meal-allowances",
+            "title": "Meal Allowances",
+            "icon": "restaurant",
+            "content": {
+                "intro": "To support your daily lunch expenses, Alenia Spain provides a meal allowance of €10 per working day.",
+                "subsections": [
+                    {
+                        "title": "💸 How does it work?",
+                        "bullets": [
+                            "The allowance is paid directly on your monthly payslip",
+                            "It is calculated based on the number of actual working days in the month",
+                            "The value is €10 per day worked",
+                            "It appears as a net benefit on your payroll",
+                            "Example: If you work 20 days in a month, you'll receive €200 in meal allowance."
+                        ]
+                    },
+                    {
+                        "title": "📌 Who is eligible?",
+                        "text": "All employees of Alenia Spain with an active contract are eligible for the meal allowance. No action is needed on your part — it's calculated and applied automatically."
+                    },
+                    {
+                        "title": "❓ Questions?",
+                        "text": "If you have any questions regarding the meal allowance, feel free to reach out to:",
+                        "contact": {
+                            "email": "admin-espana@alenia.io"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "id": "health-insurance",
+            "title": "Health Insurance – Alan",
+            "icon": "health_and_safety",
+            "content": {
+                "intro": "At Alenia, your health and well-being matter. That's why we've partnered with Alan, a modern health insurance provider offering comprehensive coverage to support you in both routine care and unexpected medical situations.",
+                "subsections": [
+                    {
+                        "title": "✅ What Alan offers:",
+                        "bullets": [
+                            "Full coverage for general and specialist consultations",
+                            "Reimbursement for medical expenses, optical, and dental care",
+                            "Direct access to your digital health account via the Alan app",
+                            "Quick reimbursements and transparent coverage",
+                            "24/7 medical chat support and wellness tools"
+                        ]
+                    },
+                    {
+                        "title": "📲 Manage everything in one app",
+                        "text": "Alan is 100% digital. You can track reimbursements, consult your coverage, and speak to healthcare professionals, all from your smartphone."
+                    },
+                    {
+                        "title": "📝 How to enroll?",
+                        "text": "Health insurance with Alan is optional but recommended. Alenia covers 50% of the cost.",
+                        "bullets": [
+                            "If you're interested in joining the plan, simply let us know!",
+                            "Send a message to admin-espana@alenia.io, and we'll walk you through the enrollment process."
+                        ],
+                        "contact": {
+                            "email": "admin-espana@alenia.io"
+                        },
+                        "links": [
+                            {
+                                "label": "For full details about your plan and benefits, visit Alan",
+                                "url": "https://alan.com/es-es"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "id": "sick-leave",
+            "title": "Sick Leave",
+            "icon": "sick",
+            "content": {
+                "intro": "",
+                "tables": [
+                    {
+                        "title": "\"Standard\" Sick Leave (less than 30 days)",
+                        "rows": [
+                            {
+                                "period": "Days 1 to 3",
+                                "payment": "No payment",
+                                "paidBy": "—"
+                            },
+                            {
+                                "period": "Days 4 to 15",
+                                "payment": "60%",
+                                "paidBy": "Company"
+                            },
+                            {
+                                "period": "Days 16 to 20",
+                                "payment": "60%",
+                                "paidBy": "Social Security"
+                            },
+                            {
+                                "period": "Days 21 to 365",
+                                "payment": "75%",
+                                "paidBy": "Social Security"
+                            }
+                        ]
+                    },
+                    {
+                        "title": "Sick Leave (more than 30 days)",
+                        "rows": [
+                            {
+                                "period": "Days 1 to 3",
+                                "payment": "No payment",
+                                "paidBy": "—"
+                            },
+                            {
+                                "period": "Day 4",
+                                "payment": "60%",
+                                "paidBy": "Company"
+                            },
+                            {
+                                "period": "Days 5 to 15",
+                                "payment": "100%",
+                                "paidBy": "Company"
+                            },
+                            {
+                                "period": "Days 16 to 20",
+                                "payment": "100%",
+                                "paidBy": "60% Social Security + 40% Company"
+                            },
+                            {
+                                "period": "Days 21 to 365",
+                                "payment": "100%",
+                                "paidBy": "75% Social Security + 25% Company"
+                            }
+                        ]
+                    },
+                    {
+                        "title": "Work Accident (more than 30 days)",
+                        "rows": [
+                            {
+                                "period": "Days 1 to 3",
+                                "payment": "75%",
+                                "paidBy": "Social Security"
+                            },
+                            {
+                                "period": "Days 4 to 15",
+                                "payment": "75%",
+                                "paidBy": "Social Security"
+                            },
+                            {
+                                "period": "Days 16 to 20",
+                                "payment": "100%",
+                                "paidBy": "75% Social Security + 25% Company"
+                            },
+                            {
+                                "period": "Days 21 to 365",
+                                "payment": "100%",
+                                "paidBy": "75% Social Security + 25% Company"
+                            }
+                        ]
+                    }
+                ],
+                "subsections": [
+                    {
+                        "title": "📌 Important Notes",
+                        "bullets": [
+                            "For the first 3 days of \"standard\" sick leave and those exceeding 30 days, the employer may apply the employer's maintenance, thus eliminating the 3-day waiting period for the employee.",
+                            "The contribution base is limited to €4,909.50, the 2025 ceiling."
+                        ]
+                    },
+                    {
+                        "title": "⚠️ Exception: Case of rest advised by the doctor",
+                        "text": "These 3 days of rest advised by the doctor do not correspond to sick leave and are not paid. The employee must provide the supporting document to the company."
+                    }
+                ]
+            }
+        },
+        {
+            "id": "absences",
+            "title": "Absences Management (Boond)",
+            "icon": "event_busy",
+            "content": {
+                "intro": "On your BoondManager profile, you can access your \"Absence Balance\" via the \"Absences\" tab. You will find several pieces of information:",
+                "subsections": [
+                    {
+                        "title": "Acquired/Ongoing",
+                        "text": "Which corresponds to the total available leave days."
+                    },
+                    {
+                        "title": "Acquired (Year N-1)",
+                        "text": "This balance will be lost if not used before its expiration date.",
+                        "table": {
+                            "headers": [
+                                "Espana",
+                                "Portugal",
+                                "UK",
+                                "France"
+                            ],
+                            "values": [
+                                "01/03",
+                                "01/02",
+                                "01/03",
+                                "–"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "Being Acquired (Year N)",
+                        "text": "This amount is incremented on the first of each month.",
+                        "table": {
+                            "headers": [
+                                "Espana",
+                                "Portugal",
+                                "UK",
+                                "France"
+                            ],
+                            "values": [
+                                "+2.5",
+                                "+2.08",
+                                "+2.33",
+                                "+2.08"
+                            ]
+                        },
+                        "note": "📆 Prorata temporis from your arrival date, rounded down to the nearest half-day. Once reduced by the number of leave days taken, this amount will be transferred to Acquired on January 1st of Year N+1."
+                    },
+                    {
+                        "title": "Taken",
+                        "text": "Number of leave days taken in your activity reports before this month.",
+                        "warning": "⚠️ It is important that your Activity Reports are fully validated to ensure that the balance of consumed leave days is up to date."
+                    },
+                    {
+                        "title": "Requested",
+                        "text": "Number of leave declared from this month.",
+                        "tip": "💡 It is therefore important to anticipate your requests in order to keep the calculation up to date."
+                    }
+                ]
+            }
+        }
+    ]
+}

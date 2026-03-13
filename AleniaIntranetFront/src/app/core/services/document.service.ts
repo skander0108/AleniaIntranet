@@ -16,6 +16,13 @@ export class DocumentService {
         return this.http.post<Document>(`${this.apiUrl}/upload`, formData);
     }
 
+    uploadDocumentWithProgress(formData: FormData): Observable<any> {
+        return this.http.post(`${this.apiUrl}/upload`, formData, {
+            reportProgress: true,
+            observe: 'events'
+        });
+    }
+
     getDocuments(search: string = '', page: number = 0, size: number = 10): Observable<any> {
         let params = new HttpParams()
             .set('page', page.toString())

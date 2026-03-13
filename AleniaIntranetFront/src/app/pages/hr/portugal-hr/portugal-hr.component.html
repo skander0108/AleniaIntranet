@@ -1,0 +1,224 @@
+<div class="hr-page-container">
+    <div *ngIf="hrData" class="max-w-4xl mx-auto">
+        <!-- Page Header -->
+        <div class="mb-8">
+            <div class="flex items-center gap-3 mb-2">
+                <span class="text-4xl">{{ hrData.flag }}</span>
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">{{ hrData.title }}</h1>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">HR policies, benefits, and guidelines for {{
+                        hrData.country }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search & Controls -->
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-6">
+            <div class="relative flex-1">
+                <span
+                    class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xl">search</span>
+                <input type="text" [(ngModel)]="searchQuery" placeholder="Search HR topics..."
+                    class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all" />
+            </div>
+            <div class="flex gap-2">
+                <button (click)="expandAll()"
+                    class="px-3 py-2 text-xs font-medium rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                    Expand All
+                </button>
+                <button (click)="collapseAll()"
+                    class="px-3 py-2 text-xs font-medium rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                    Collapse All
+                </button>
+            </div>
+        </div>
+
+        <!-- No results -->
+        <div *ngIf="filteredSections.length === 0" class="text-center py-12">
+            <span
+                class="material-symbols-outlined text-5xl text-gray-300 dark:text-gray-600 mb-3 block">search_off</span>
+            <p class="text-gray-500 dark:text-gray-400">No HR topics match your search.</p>
+        </div>
+
+        <!-- Sections -->
+        <div class="flex flex-col gap-4">
+            <div *ngFor="let section of filteredSections"
+                class="hr-card rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <!-- Card Header (clickable) -->
+                <button (click)="toggleSection(section.id)"
+                    class="w-full flex items-center gap-4 px-5 py-4 text-left hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors">
+                    <div
+                        class="flex items-center justify-center w-10 h-10 rounded-xl bg-primary/10 text-primary shrink-0">
+                        <span class="material-symbols-outlined">{{ section.icon }}</span>
+                    </div>
+                    <h2 class="flex-1 text-base font-semibold text-gray-900 dark:text-white">{{ section.title }}</h2>
+                    <span class="material-symbols-outlined text-gray-400 transition-transform duration-300"
+                        [class.rotate-180]="isSectionExpanded(section.id)">
+                        expand_more
+                    </span>
+                </button>
+
+                <!-- Card Body -->
+                <div *ngIf="isSectionExpanded(section.id)"
+                    class="px-5 pb-5 border-t border-gray-100 dark:border-gray-700 pt-4 animate-fadeIn">
+
+                    <!-- Intro -->
+                    <p *ngIf="section.content.intro"
+                        class="text-sm text-gray-600 dark:text-gray-300 mb-4 leading-relaxed">
+                        {{ section.content.intro }}
+                    </p>
+
+                    <!-- Subsections -->
+                    <div *ngIf="section.content.subsections" class="space-y-5">
+                        <div *ngFor="let sub of section.content.subsections" class="subsection">
+                            <h3 class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-1.5">{{ sub.title }}
+                            </h3>
+                            <p *ngIf="sub.text" class="text-sm text-gray-600 dark:text-gray-300 mb-2 leading-relaxed">{{
+                                sub.text }}</p>
+
+                            <!-- Bullets -->
+                            <ul *ngIf="sub.bullets" class="space-y-1.5 mb-2">
+                                <li *ngFor="let bullet of sub.bullets"
+                                    class="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-300">
+                                    <span class="text-primary mt-1 text-xs">●</span>
+                                    <span>{{ bullet }}</span>
+                                </li>
+                            </ul>
+
+                            <!-- Guides -->
+                            <div *ngIf="sub.guides" class="space-y-2 my-3">
+                                <div *ngFor="let guide of sub.guides"
+                                    class="p-3 rounded-lg bg-gray-50 dark:bg-gray-700/50 border border-gray-100 dark:border-gray-600">
+                                    <p
+                                        class="text-sm font-medium text-gray-800 dark:text-gray-200 flex items-center gap-2">
+                                        <span
+                                            class="material-symbols-outlined text-primary text-base">description</span>
+                                        {{ guide.name }}
+                                    </p>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ guide.description }}</p>
+                                </div>
+                            </div>
+
+                            <!-- Contacts list -->
+                            <div *ngIf="sub.contacts" class="space-y-3 my-3">
+                                <div *ngFor="let contact of sub.contacts"
+                                    class="p-3 rounded-lg bg-gray-50 dark:bg-gray-700/50 border border-gray-100 dark:border-gray-600">
+                                    <p class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-1">📌 {{
+                                        contact.name }}</p>
+                                    <div class="flex flex-col gap-1">
+                                        <a *ngIf="contact.phone" [href]="'tel:' + contact.phone"
+                                            class="flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-300 hover:text-primary">
+                                            <span class="material-symbols-outlined text-base">phone</span>
+                                            {{ contact.phone }}
+                                        </a>
+                                        <a *ngIf="contact.email" [href]="'mailto:' + contact.email"
+                                            class="flex items-center gap-1.5 text-sm text-primary hover:underline">
+                                            <span class="material-symbols-outlined text-base">email</span>
+                                            {{ contact.email }}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Single contact -->
+                            <div *ngIf="sub.contact" class="mt-2">
+                                <a *ngIf="sub.contact.email" [href]="'mailto:' + sub.contact.email"
+                                    class="inline-flex items-center gap-1.5 text-sm text-primary hover:underline">
+                                    <span class="material-symbols-outlined text-base">email</span>
+                                    {{ sub.contact.email }}
+                                </a>
+                            </div>
+
+                            <!-- Note -->
+                            <p *ngIf="sub.note"
+                                class="text-xs text-gray-500 dark:text-gray-400 mt-2 italic bg-gray-50 dark:bg-gray-700/40 p-2 rounded-lg">
+                                {{ sub.note }}</p>
+
+                            <!-- Warning -->
+                            <div *ngIf="sub.warning"
+                                class="flex items-start gap-2 mt-2 p-3 rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800">
+                                <span class="material-symbols-outlined text-amber-500 text-lg shrink-0">warning</span>
+                                <p class="text-xs text-amber-700 dark:text-amber-300">{{ sub.warning }}</p>
+                            </div>
+
+                            <!-- FAQ -->
+                            <div *ngIf="sub.faq" class="space-y-3 mt-3">
+                                <div *ngFor="let item of sub.faq"
+                                    class="p-3 rounded-lg bg-blue-50/50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-800/50">
+                                    <p
+                                        class="text-sm font-medium text-gray-800 dark:text-gray-200 flex items-start gap-2">
+                                        <span
+                                            class="material-symbols-outlined text-blue-500 text-base mt-0.5 shrink-0">help</span>
+                                        {{ item.question }}
+                                    </p>
+                                    <p class="text-xs text-gray-600 dark:text-gray-400 mt-1 ml-6">{{ item.answer }}</p>
+                                </div>
+                            </div>
+
+                            <!-- Details (for bonus calculation breakdown) -->
+                            <div *ngIf="sub.details" class="space-y-3 mt-3">
+                                <div *ngFor="let detail of sub.details"
+                                    class="p-3 rounded-lg bg-gray-50 dark:bg-gray-700/50 border border-gray-100 dark:border-gray-600">
+                                    <p class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-1">{{
+                                        detail.label }}</p>
+                                    <ul class="space-y-1">
+                                        <li *ngFor="let item of detail.items"
+                                            class="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-300">
+                                            <span class="text-primary mt-1 text-xs">●</span>
+                                            <span>{{ item }}</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- Steps (process steps) -->
+                            <div *ngIf="sub.steps" class="space-y-2 mt-3">
+                                <div *ngFor="let step of sub.steps; let i = index"
+                                    class="flex items-start gap-3 p-3 rounded-lg bg-gray-50 dark:bg-gray-700/50 border border-gray-100 dark:border-gray-600">
+                                    <div
+                                        class="flex items-center justify-center w-7 h-7 rounded-full bg-primary/10 text-primary text-xs font-bold shrink-0">
+                                        {{ step.step }}
+                                    </div>
+                                    <p class="text-sm text-gray-600 dark:text-gray-300">{{ step.description }}</p>
+                                </div>
+                            </div>
+
+                            <!-- Rates (overtime) -->
+                            <div *ngIf="sub.rates" class="space-y-2 mt-3">
+                                <div *ngFor="let rate of sub.rates"
+                                    class="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-700/50 border border-gray-100 dark:border-gray-600">
+                                    <span class="text-sm text-gray-700 dark:text-gray-300">{{ rate.day }}</span>
+                                    <span class="text-sm font-bold text-primary">{{ rate.rate }}</span>
+                                </div>
+                            </div>
+
+                            <!-- On-call rates -->
+                            <div *ngIf="sub.oncallRates" class="overflow-x-auto mt-3">
+                                <table class="w-full text-sm border-collapse">
+                                    <thead>
+                                        <tr class="bg-gray-50 dark:bg-gray-700">
+                                            <th
+                                                class="text-left px-4 py-2 font-medium text-gray-600 dark:text-gray-300 border-b border-gray-200 dark:border-gray-600">
+                                                Period</th>
+                                            <th
+                                                class="text-right px-4 py-2 font-medium text-gray-600 dark:text-gray-300 border-b border-gray-200 dark:border-gray-600">
+                                                Compensation</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let rate of sub.oncallRates"
+                                            class="border-b border-gray-100 dark:border-gray-700">
+                                            <td class="px-4 py-2.5 text-gray-700 dark:text-gray-300">{{ rate.period }}
+                                            </td>
+                                            <td class="px-4 py-2.5 text-right font-bold text-primary">{{ rate.rate }}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

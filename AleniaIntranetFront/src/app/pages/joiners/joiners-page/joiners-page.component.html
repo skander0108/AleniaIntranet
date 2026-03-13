@@ -20,7 +20,7 @@
             </p>
         </div>
         <div class="flex items-end gap-2">
-            <button *ngIf="isManager" (click)="openFormModal()"
+            <button *ngIf="isHR" (click)="openFormModal()"
                 class="bg-primary hover:bg-blue-700 text-white h-10 px-4 rounded-lg text-sm font-bold flex items-center gap-2 transition-colors">
                 <span class="material-symbols-outlined text-[20px]">add</span>
                 Add New Joiner
@@ -164,7 +164,7 @@
                     <div class="size-16 rounded-full bg-cover bg-center bg-gray-200"
                         [style.background-image]="getPhotoUrl(joiner)"></div>
                 </div>
-                <button *ngIf="isManager" (click)="$event.stopPropagation(); openFormModal(joiner)"
+                <button *ngIf="isHR" (click)="$event.stopPropagation(); openFormModal(joiner)"
                     class="text-slate-400 hover:text-primary transition-colors">
                     <span class="material-symbols-outlined">edit</span>
                 </button>

@@ -27,8 +27,8 @@ public class ChatConversation {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "assigned_admin_id")
-    private User assignedAdmin;
+    @JoinColumn(name = "assigned_hr_id")
+    private User assignedHr;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
